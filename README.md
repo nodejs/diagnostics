@@ -18,6 +18,7 @@ Tracing Working Group
 * @mikeal
 * @rvagg
 * @AndreasMadsen
+* @watson
 * @rmg
 * @domenic
 * @dberesford
