@@ -25,7 +25,7 @@ handle objects.
 The API that node exposes is mostly defined in JavaScript files. However
 ECMAScript does not define any API for creating a TCP socket, reading a file
 etc.. That logic is implemented in C++ using libuv and the v8 API. The JavaScript in
-nodecore interacts with this C++ layer using the handle objects.
+node core interacts with this C++ layer using the handle objects.
 
 For example in `net.connect(port, address)` that creates a TCP connection,
 two handle objects (`TCPConnectWrap` and `TCP`) are created:
@@ -49,7 +49,7 @@ one (`TCP`) is for maintaining the connection.
 
 `TCPConnectWrap` gets its information by setting properties on the handle
 object, like `address` and `port`. Those properties are read by the C++ layer,
-but can also be inspected from the AsyncWrap hooks. When the handle is create
+but can also be inspected from the AsyncWrap hooks. When the handle is created
 using `new TCPConnectWrap()` the `init` hook is called.
 
 A `oncomplete` property is also set, this is the callback for when the
@@ -58,8 +58,8 @@ is called, just after the `after` hook is called.
 
 The `TCP` handle works exactly the same way, except that the information
 is passed as arguments to a method `.connect` and the `onread` function
-is called multiply times, thus it behaves like an event. This also means that
-the `before` and `after` hooks are called multiply times.
+is called multiple times, thus it behaves like an event. This also means that
+the `before` and `after` hooks are called multiple times.
 
 Thus one should expect the hooks be called in the following order:
 
@@ -84,7 +84,8 @@ the text above and the text below.
 
 ## The API
 
-At the moment there don't exist a high level API for AsyncWrap. It is simply exposed through `process.binding`:
+At the moment there is not a high level API for AsyncWrap. It is simply exposed
+through `process.binding`:
 
 ```javascript
 const asyncWrap = process.binding('async_wrap');
@@ -135,9 +136,9 @@ signatures are quite similar. The `this` variable refers to the handle object,
 and `init` hook has two extra arguments `provider` and `parent`.
 
 ```javascript
-function init(provider, parent) { this = handle; }
-function before() { this = handle; }
-function after() { this = handle; }
+function init(provider, parent) { }
+function before() {  }
+function after() { }
 ```
 
 ##### this
@@ -256,11 +257,11 @@ lookup before that.
 inside one of the hooks, creates an infinite recursion. Use `fs.syncWrite(1, msg)`
 or `process._rawDebug(msg)` instead.
 
-* `process.nextTick` never creates a handle object. You will have to money patch
+* `process.nextTick` never creates a handle object. You will have to monkey patch
 this.
 
 * Timer functions (like `setTimeout`) shares a single `Timer` handle, thus you
-will usually have to money patch those functions.
+will usually have to monkey patch those functions.
 
 ## Resources
 
