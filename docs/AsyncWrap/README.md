@@ -27,7 +27,8 @@ ECMAScript does not define any API for creating a TCP socket, reading a file
 etc.. That logic is implemented in C++ using libuv and the v8 API. The JavaScript in
 nodecore interacts with this C++ layer using the handle objects.
 
-For example to create and connect a TCP socket:
+For example in `net.connect(port, address)` that creates a TCP connection,
+two handle objects (`TCPConnectWrap` and `TCP`) are created:
 
 ```javascript
 const TCP = process.binding('tcp_wrap').TCP;
@@ -43,15 +44,16 @@ socket.onread = onread;
 socket.connect(req, address, port);
 ```
 
-This example uses two handle objects. The first one (`TCPConnectWrap`) is for
-connecting the socket, the second one (`TCP`) is for maintaining the connection.
+The first one (`TCPConnectWrap`) is for connecting the socket, the second
+one (`TCP`) is for maintaining the connection.
 
 `TCPConnectWrap` gets its information by setting properties on the handle
 object, like `address` and `port`. Those properties are read by the C++ layer,
 but can also be inspected from the AsyncWrap hooks. When the handle is create
 using `new TCPConnectWrap()` the `init` hook is called.
 
-A `oncomplete` property is also set, this is the callback for when the connection is made or failed. Just before calling `oncomplete` the `before` hook
+A `oncomplete` property is also set, this is the callback for when the
+connection is made or failed. Just before calling `oncomplete` the `before` hook
 is called, just after the `after` hook is called.
 
 The `TCP` handle works exactly the same way, except that the information
@@ -77,7 +79,8 @@ after // TCP
 ...
 ```
 
-_tick_ indicates there is at least one tick between the text above and the text below.
+_tick_ indicates there is at least one tick (as in `process.nextTick()`) between
+the text above and the text below.
 
 ## The API
 
@@ -94,7 +97,7 @@ To assign the hooks call:
 
 ```javascript
 asyncWrap.setupHooks(init, before, after);
-function init(provider) { /* consumer code */ }
+function init(provider, parent) { /* consumer code */ }
 function before() { /* consumer code */ }
 function after() { /* consumer code */ }
 ```
@@ -128,11 +131,75 @@ asyncWrap.disable();
 #### The hooks
 
 Currently there are 3 hooks: `init`, `before` and `after`. The function
-signatures are quite similar. In all cases the `this` variable is the handle
-object. Users may read properties from this object such as `port` and `address` in the `TCPConnectWrap` case, or set user specific properties.
+signatures are quite similar. The `this` variable refers to the handle object,
+and `init` hook has two extra arguments `provider` and `parent`.
 
-Finally the `init` has an extra argument called `provider`, this is an
-integer that refer to names defined in an `async.Providers` object map.
+```javascript
+function init(provider, parent) { this = handle; }
+function before() { this = handle; }
+function after() { this = handle; }
+```
+
+##### this
+In all cases the `this` variable is the handle object. Users may read properties
+from this object such as `port` and `address` in the `TCPConnectWrap` case,
+or set user specific properties. However in the `init` hook the object is not
+yet fully constructed, thus some properties are not safe to read. This causes
+problems when doing `util.inspect(this)` or similar.
+
+##### provider
+This is an integer that refer to names defined in an `asyncWrap.Providers`
+object map.
+
+At the time of writing this is the current list:
+
+```javascript
+{ NONE: 0,
+  CRYPTO: 1,
+  FSEVENTWRAP: 2,
+  FSREQWRAP: 3,
+  GETADDRINFOREQWRAP: 4,
+  GETNAMEINFOREQWRAP: 5,
+  JSSTREAM: 6,
+  PIPEWRAP: 7,
+  PIPECONNECTWRAP: 8,
+  PROCESSWRAP: 9,
+  QUERYWRAP: 10,
+  SHUTDOWNWRAP: 11,
+  SIGNALWRAP: 12,
+  STATWATCHER: 13,
+  TCPWRAP: 14,
+  TCPCONNECTWRAP: 15,
+  TIMERWRAP: 16,
+  TLSWRAP: 17,
+  TTYWRAP: 18,
+  UDPWRAP: 19,
+  UDPSENDWRAP: 20,
+  WRITEWRAP: 21,
+  ZLIB: 22 }
+```
+
+##### parent
+
+In some cases the handle was created from another handle object. In those
+cases the `parent` argument is set the creating handle object. If there is
+no parent handle then it is just `null`.
+
+The most common case is the TCP server. The TCP server itself is a `TCP` handle,
+but when receiving new connection it creates another `TCP` handle that is
+responsible for the new socket. It does this before emitting the `onconnection`
+handle event, thus the asyncWrap hooks are called in the following order:
+
+```
+```javascript
+init // TCP (socket)
+before // TCP (server)
+after // TCP (server)
+```
+
+This means it is not possible to know in what handle context the new socket
+handle was created using the `before` and `after` hooks. However the
+`parent` argument provides this information.
 
 ## example
 
@@ -147,13 +214,15 @@ asyncWrap.enable();
 // global state variable, that contains the current stack trace
 let currentStack = '';
 
-function init(provider) {
+function init(provider, parent) {
   // When a handle is created, collect the stack trace such that we later
   // can see what involved the handle constructor.
   const localStack = (new Error()).stack.split('\n').slice(1).join('\n');
-  // Compute the full stack and store it as a property on the handle object,˛
-  // such that it can be fetched later in either `before` or `after`.
-  this._full_init_stack = localStack + '\n' + currentStack;
+
+  // Compute the full stack and store it as a property on the handle object,
+  // such that it can be fetched later.
+  const extraStack = parent ? parent._full_init_stack : currentStack;
+  this._full_init_stack = localStack + '\n' + extraStack;
 }
 function before() {
   // A callback is about to be called, update the `currentStack` such that
@@ -179,6 +248,10 @@ complete long-stack-trace implementation.
 
 ## Things you might not expect
 
+* It is not obvious when a handle object is created. For example the TCP server
+creates the `TCP` handle when `.listen` is called and it may perform an DNS
+lookup before that.
+
 * `console.log` is async and thus invokes AsyncWrap, thus using `console.log`
 inside one of the hooks, creates an infinite recursion. Use `fs.syncWrite(1, msg)`
 or `process._rawDebug(msg)` instead.
@@ -186,7 +259,7 @@ or `process._rawDebug(msg)` instead.
 * `process.nextTick` never creates a handle object. You will have to money patch
 this.
 
-* Timer functions (like `setTimeout`) shares a single Timer handle, thus you
+* Timer functions (like `setTimeout`) shares a single `Timer` handle, thus you
 will usually have to money patch those functions.
 
 ## Resources
