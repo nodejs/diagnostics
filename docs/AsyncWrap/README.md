@@ -3,29 +3,29 @@ Node.js tracing - AsyncWrap
 
 AsyncWrap is two things. One is a
 [class abstraction](https://github.com/nodejs/node/blob/master/src/async-wrap.h)
-there provides node internal facilities for handling async things, such as
+that provides an internal mechanism for handling asynchronous tasks, such as
 calling a callback.
-The other part is a an API for setting up hooks, that allow one to get
+The other part is an API for setting up hooks and allows one to get
 structural tracing information about the life of handle objects. In the context
 of tracing the latter is usually what is meant.
 
-_The reasoning for the current naming confusion, is that the API part implements
-the hooks through the AsyncWrap class. But there is nothing inherently correct
-in doing that, for example if v8 provided those facilities the AsyncWrap class
-would not need be involved in the AsyncWrap API._
+_The reasoning for the current naming confusion is that the API part implements
+the hooks through the AsyncWrap class, but this is not inherently necessary. For
+example if v8 provided those facilities the AsyncWrap class would not need be
+involved in the AsyncWrap API._
 
 For the remaining description the API part is what is meant by AsyncWrap.
 
-## Handle objects
+## Handle Objects
 
-AsyncWrap emits events (hooks) that informs the consumer about the life of all handle
+AsyncWrap emits events (hooks) that inform the consumer about the life of all handle
 objects in node. Thus in order to understand AsyncWrap one must first understand
 handle objects.
 
-The API that node exposes is mostly defined in JavaScript files. However
-ECMAScript does not define any API for creating a TCP socket, reading a file
-etc.. That logic is implemented in C++ using libuv and the v8 API. The JavaScript in
-node core interacts with this C++ layer using the handle objects.
+Node's core API is mostly defined in JavaScript. However ECMAScript does not
+define any API for creating a TCP socket, reading a file etc.. That logic is
+implemented in C++ using libuv and the v8 API. The JavaScript in node core
+interacts with this C++ layer using the handle objects.
 
 For example in `net.connect(port, address)` that creates a TCP connection,
 two handle objects (`TCPConnectWrap` and `TCP`) are created:
@@ -106,7 +106,7 @@ function after() { /* consumer code */ }
 Note that calling `asyncWrap.setupHooks` again, will overwrite the previous
 hooks.
 
-#### Enable and disable
+#### Enable And Disable
 
 Because there is a small performance penalty in just calling a noop function,
 AsyncWrap is not enabled by default. To enable AsyncWrap call:
@@ -129,7 +129,7 @@ Disabling AsyncWrap can be done with:
 asyncWrap.disable();
 ```
 
-#### The hooks
+#### The Hooks
 
 Currently there are 3 hooks: `init`, `before` and `after`. The function
 signatures are quite similar. The `this` variable refers to the handle object,
@@ -202,7 +202,7 @@ This means it is not possible to know in what handle context the new socket
 handle was created using the `before` and `after` hooks. However the
 `parent` argument provides this information.
 
-## example
+## Example
 
 A classic use case for AsyncWrap is to create a long-stack-trace tool.
 
@@ -247,7 +247,7 @@ module.exports = getStack;
 Please note that this example is way simpler, than what is required from a
 complete long-stack-trace implementation.
 
-## Things you might not expect
+## Things You Might Not Expect
 
 * It is not obvious when a handle object is created. For example the TCP server
 creates the `TCP` handle when `.listen` is called and it may perform an DNS
@@ -255,13 +255,18 @@ lookup before that.
 
 * `console.log` is async and thus invokes AsyncWrap, thus using `console.log`
 inside one of the hooks, creates an infinite recursion. Use `fs.syncWrite(1, msg)`
-or `process._rawDebug(msg)` instead.
+or `process._rawDebug(msg)` instead. The latter is a little nicer because it
+uses `util.inspect`. On the other hand `fs.syncWrite` is a documented function.
 
 * `process.nextTick` never creates a handle object. You will have to monkey patch
 this.
 
 * Timer functions (like `setTimeout`) shares a single `Timer` handle, thus you
 will usually have to monkey patch those functions.
+
+* Promises are also not tracked by AsyncWrap. The `Promise` constructor can also
+be monkey patched, but unfortunately it is quite difficult. See
+[async-listener](https://github.com/othiym23/async-listener/blob/14d01b2b82817fff9993f065587f9009f3d2126b/index.js#L257L407) for how to do it.
 
 ## Resources
 
