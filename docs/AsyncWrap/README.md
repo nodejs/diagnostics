@@ -18,9 +18,9 @@ For the remaining description the API part is what is meant by AsyncWrap.
 
 ## Handle Objects
 
-AsyncWrap emits events (hooks) that inform the consumer about the life of all handle
-objects in node. Thus in order to understand AsyncWrap one must first understand
-handle objects.
+AsyncWrap emits events (hooks) that inform the consumer about the life of all
+handle objects in node. Thus in order to understand AsyncWrap one must first
+understand handle objects.
 
 Node's core API is mostly defined in JavaScript. However ECMAScript does not
 define any API for creating a TCP socket, reading a file etc.. That logic is
@@ -91,8 +91,8 @@ through `process.binding`:
 const asyncWrap = process.binding('async_wrap');
 ```
 
-_Be warned that this API is not an official API and can change at any time, even if it's just patch
-update._
+_Be warned that this API is not an official API and can change at any time, even
+if it's just patch update._
 
 To assign the hooks call:
 
@@ -227,7 +227,8 @@ function init(provider, parent) {
 }
 function before() {
   // A callback is about to be called, update the `currentStack` such that
-  // it is correct for when another handle is initialized or `getStack` is called.
+  // it is correct for when another handle is initialized or `getStack` is
+  // called.
   currentStack = this._full_init_stack;
 }
 function after() {
@@ -244,7 +245,7 @@ function getStack(message) {
 module.exports = getStack;
 ```
 
-Please note that this example is way simpler, than what is required from a
+Please note that this example is way simpler than what is required from a
 complete long-stack-trace implementation.
 
 ## Things You Might Not Expect
@@ -266,7 +267,8 @@ will usually have to monkey patch those functions.
 
 * Promises are also not tracked by AsyncWrap. The `Promise` constructor can also
 be monkey patched, but unfortunately it is quite difficult. See
-[async-listener](https://github.com/othiym23/async-listener/blob/14d01b2b82817fff9993f065587f9009f3d2126b/index.js#L257L407) for how to do it.
+[async-listener](https://github.com/othiym23/async-listener/blob/14d01b2b82817fff9993f065587f9009f3d2126b/index.js#L257L407)
+for how to do it.
 
 ## Resources
 

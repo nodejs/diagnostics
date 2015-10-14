@@ -20,7 +20,8 @@ function init(provider, parent) {
 }
 function before() {
   // A callback is about to be called, update the `currentStack` such that
-  // it is correct for when another handle is initialized or `getStack` is called.
+  // it is correct for when another handle is initialized or `getStack` is
+  // called.
   currentStack = this._full_init_stack;
 }
 function after() {
