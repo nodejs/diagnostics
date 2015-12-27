@@ -16,6 +16,14 @@ involved in the AsyncWrap API._
 
 For the remaining description the API part is what is meant by AsyncWrap.
 
+## Table of Content
+
+* [Handle Objects](#handle-objects)
+* [The API](#the-api)
+* [Example](#example)
+* [Things You Might Not Expect](#things-you-might-not-expect)
+* [Resources](#resources)
+
 ## Handle Objects
 
 AsyncWrap emits events (hooks) that inform the consumer about the life of all
