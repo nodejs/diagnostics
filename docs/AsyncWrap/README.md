@@ -53,13 +53,13 @@ but can also be inspected from the AsyncWrap hooks. When the handle is created
 using `new TCPConnectWrap()` the `init` hook is called.
 
 A `oncomplete` property is also set, this is the callback for when the
-connection is made or failed. Just before calling `oncomplete` the `before` hook
-is called, just after the `after` hook is called.
+connection is made or failed. Just before calling `oncomplete` the `pre` hook
+is called, just after the `post` hook is called.
 
 The `TCP` handle works exactly the same way, except that the information
 is passed as arguments to a method `.connect` and the `onread` function
 is called multiple times, thus it behaves like an event. This also means that
-the `before` and `after` hooks are called multiple times.
+the `pre` and `post` hooks are called multiple times.
 
 Thus one should expect the hooks be called in the following order:
 
@@ -67,14 +67,14 @@ Thus one should expect the hooks be called in the following order:
 init // TCPConnectWrap
 init // TCP
 === tick ===
-before // TCPConnectWrap
-after // TCPConnectWrap
+pre // TCPConnectWrap
+post // TCPConnectWrap
 === tick ===
-before // TCP
-after // TCP
+pre // TCP
+post // TCP
 === tick ===
-before // TCP
-after // TCP
+pre // TCP
+post // TCP
 === tick ===
 ...
 ```
@@ -97,10 +97,10 @@ if it's just patch update._
 To assign the hooks call:
 
 ```javascript
-asyncWrap.setupHooks(init, before, after);
+asyncWrap.setupHooks(init, pre, post);
 function init(provider, parent) { /* consumer code */ }
-function before() { /* consumer code */ }
-function after() { /* consumer code */ }
+function pre() { /* consumer code */ }
+function post() { /* consumer code */ }
 ```
 
 Note that calling `asyncWrap.setupHooks` again, will overwrite the previous
@@ -131,14 +131,14 @@ asyncWrap.disable();
 
 #### The Hooks
 
-Currently there are 3 hooks: `init`, `before` and `after`. The function
+Currently there are 3 hooks: `init`, `pre` and `post`. The function
 signatures are quite similar. The `this` variable refers to the handle object,
 and `init` hook has two extra arguments `provider` and `parent`.
 
 ```javascript
 function init(provider, parent) { }
-function before() {  }
-function after() { }
+function pre() {  }
+function post() { }
 ```
 
 ##### this
@@ -194,12 +194,12 @@ handle event, thus the asyncWrap hooks are called in the following order:
 ```
 ```javascript
 init // TCP (socket)
-before // TCP (server)
-after // TCP (server)
+pre // TCP (server)
+post // TCP (server)
 ```
 
 This means it is not possible to know in what handle context the new socket
-handle was created using the `before` and `after` hooks. However the
+handle was created using the `pre` and `post` hooks. However the
 `parent` argument provides this information.
 
 ## Example
@@ -209,7 +209,7 @@ A classic use case for AsyncWrap is to create a long-stack-trace tool.
 ```javascript
 const asyncWrap = process.binding('async_wrap');
 
-asyncWrap.setupHooks(init, before, after);
+asyncWrap.setupHooks(init, pre, post);
 asyncWrap.enable();
 
 // global state variable, that contains the current stack trace
@@ -225,13 +225,13 @@ function init(provider, parent) {
   const extraStack = parent ? parent._full_init_stack : currentStack;
   this._full_init_stack = localStack + '\n' + extraStack;
 }
-function before() {
+function pre() {
   // A callback is about to be called, update the `currentStack` such that
   // it is correct for when another handle is initialized or `getStack` is
   // called.
   currentStack = this._full_init_stack;
 }
-function after() {
+function post() {
   // At the time of writing there are some odd cases where there is no handle
   // context, this line prevents that from resulting in wrong stack trace. But
   // the stack trace will be shorter compared to what ideally should happen.
