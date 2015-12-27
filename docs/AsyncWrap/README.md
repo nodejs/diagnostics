@@ -50,6 +50,9 @@ req.port = port;
 const socket = new TCP();
 socket.onread = onread;
 socket.connect(req, address, port);
+
+// later
+socket.destroy();
 ```
 
 The first one (`TCPConnectWrap`) is for connecting the socket, the second
@@ -69,6 +72,11 @@ is passed as arguments to a method `.connect` and the `onread` function
 is called multiple times, thus it behaves like an event. This also means that
 the `pre` and `post` hooks are called multiple times.
 
+At some time later in the lifetime of the program `socket.destroy()` is called,
+this will call the `destroy` hook for the `socket` handle. Other handle objects
+aren't directly destroyed, in that case the `destroy` hook is called when the
+handle object garbage collected by v8.
+
 Thus one should expect the hooks be called in the following order:
 
 ```javascript
@@ -85,6 +93,10 @@ pre // TCP
 post // TCP
 === tick ===
 ...
+=== tick ===
+destroy // TCP
+=== tick ===
+destroy // TCPConnectWrap
 ```
 
 _tick_ indicates there is at least one tick (as in `process.nextTick()`) between
@@ -105,14 +117,15 @@ if it's just patch update._
 To assign the hooks call:
 
 ```javascript
-asyncWrap.setupHooks(init, pre, post);
-function init(provider, parent) { /* consumer code */ }
+asyncWrap.setupHooks(init, pre, post, destroy);
+function init(provider, uid, parent) { /* consumer code */ }
 function pre() { /* consumer code */ }
 function post() { /* consumer code */ }
+function destroy(uid) { /* consumer code */ }
 ```
 
-Note that calling `asyncWrap.setupHooks` again, will overwrite the previous
-hooks.
+Note that only the `init` function is required and that calling
+`asyncWrap.setupHooks` again will overwrite the previous hooks.
 
 #### Enable And Disable
 
@@ -139,24 +152,33 @@ asyncWrap.disable();
 
 #### The Hooks
 
-Currently there are 3 hooks: `init`, `pre` and `post`. The function
-signatures are quite similar. The `this` variable refers to the handle object,
-and `init` hook has two extra arguments `provider` and `parent`.
+Currently there are 4 hooks: `init`, `pre`, `post` `destroy`. The function
+signatures are quite similar. The `this` variable refers to the handle object.
+The `init` hook has three extra arguments `provider`, `uid` and `parent`. The
+`destroy` hook also has the `uid` argument.
 
 ```javascript
-function init(provider, parent) { }
-function pre() {  }
+function init(provider, uid, parent) { }
+function pre() { }
 function post() { }
+function destroy(uid) { }
 ```
 
 ##### this
-In all cases the `this` variable is the handle object. Users may read properties
-from this object such as `port` and `address` in the `TCPConnectWrap` case,
-or set user specific properties. However in the `init` hook the object is not
-yet fully constructed, thus some properties are not safe to read. This causes
-problems when doing `util.inspect(this)` or similar.
+
+In the `init`, `pre` and `post` cases the `this` variable is the handle object.
+Users may read properties from this object such as `port` and `address` in the
+`TCPConnectWrap` case, or set user specific properties
+
+In the `init` hook the handle object is not yet fully constructed, thus some
+properties are not safe to read. This causes problems when doing
+`util.inspect(this)` or similar.
+
+In the `destroy` hook `this` equals `null`, this is because the handle objects
+has been deleted by the garbage collector and thus doesn't exists.
 
 ##### provider
+
 This is an integer that refer to names defined in an `asyncWrap.Providers`
 object map.
 
@@ -188,6 +210,13 @@ At the time of writing this is the current list:
   ZLIB: 22 }
 ```
 
+##### uid
+
+The `uid` is a unique integer that identify each handle object. Because the
+`destroy` hook isn't called with the handle object, this is particular useful
+for storing information related to the handle object, that the user require in
+the `destroy` hook.
+
 ##### parent
 
 In some cases the handle was created from another handle object. In those
@@ -199,7 +228,6 @@ but when receiving new connection it creates another `TCP` handle that is
 responsible for the new socket. It does this before emitting the `onconnection`
 handle event, thus the asyncWrap hooks are called in the following order:
 
-```
 ```javascript
 init // TCP (socket)
 pre // TCP (server)
@@ -223,7 +251,7 @@ asyncWrap.enable();
 // global state variable, that contains the current stack trace
 let currentStack = '';
 
-function init(provider, parent) {
+function init(provider, uid, parent) {
   // When a handle is created, collect the stack trace such that we later
   // can see what involved the handle constructor.
   const localStack = (new Error()).stack.split('\n').slice(1).join('\n');
