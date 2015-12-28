@@ -55,15 +55,15 @@ socket.connect(req, address, port);
 socket.destroy();
 ```
 
-The first one (`TCPConnectWrap`) is for connecting the socket, the second
-one (`TCP`) is for maintaining the connection.
+The first handle object (`TCPConnectWrap`) is for connecting the socket, the
+second one (`TCP`) is for maintaining the connection.
 
 `TCPConnectWrap` gets its information by setting properties on the handle
 object, like `address` and `port`. Those properties are read by the C++ layer,
 but can also be inspected from the AsyncWrap hooks. When the handle is created
 using `new TCPConnectWrap()` the `init` hook is called.
 
-A `oncomplete` property is also set, this is the callback for when the
+An `oncomplete` property is also set, this is the callback for when the
 connection is made or failed. Just before calling `oncomplete` the `pre` hook
 is called, just after the `post` hook is called.
 
@@ -72,10 +72,10 @@ is passed as arguments to a method `.connect` and the `onread` function
 is called multiple times, thus it behaves like an event. This also means that
 the `pre` and `post` hooks are called multiple times.
 
-At some time later in the lifetime of the program `socket.destroy()` is called,
-this will call the `destroy` hook for the `socket` handle. Other handle objects
-aren't directly destroyed, in that case the `destroy` hook is called when the
-handle object garbage collected by v8.
+At some later time the `socket.destroy()` is called, this will call the
+`destroy` hook for the `socket` handle. Other handle objects aren't explicitly
+destroyed, in that case the `destroy` hook is called when the handle object is
+garbage collected by v8.
 
 Thus one should expect the hooks be called in the following order:
 
@@ -152,10 +152,9 @@ asyncWrap.disable();
 
 #### The Hooks
 
-Currently there are 4 hooks: `init`, `pre`, `post` `destroy`. The function
-signatures are quite similar. The `this` variable refers to the handle object.
-The `init` hook has three extra arguments `provider`, `uid` and `parent`. The
-`destroy` hook also has the `uid` argument.
+Currently there are 4 hooks: `init`, `pre`, `post` `destroy`. The `this`
+variable refers to the handle object. The `init` hook has three extra arguments
+`provider`, `uid` and `parent`. The `destroy` hook also has the `uid` argument.
 
 ```javascript
 function init(provider, uid, parent) { }
@@ -168,18 +167,18 @@ function destroy(uid) { }
 
 In the `init`, `pre` and `post` cases the `this` variable is the handle object.
 Users may read properties from this object such as `port` and `address` in the
-`TCPConnectWrap` case, or set user specific properties
+`TCPConnectWrap` case, or set user specific properties.
 
 In the `init` hook the handle object is not yet fully constructed, thus some
 properties are not safe to read. This causes problems when doing
 `util.inspect(this)` or similar.
 
-In the `destroy` hook `this` equals `null`, this is because the handle objects
-has been deleted by the garbage collector and thus doesn't exists.
+In the `destroy` hook `this` is `null`, this is because the handle objects has
+been deleted by the garbage collector and thus doesn't exists.
 
 ##### provider
 
-This is an integer that refer to names defined in an `asyncWrap.Providers`
+This is an integer that refer to names defined in the `asyncWrap.Providers`
 object map.
 
 At the time of writing this is the current list:
@@ -308,12 +307,12 @@ for how to do it.
 
 ## Resources
 
+* Status overview of AsyncWrap: https://github.com/nodejs/tracing-wg/issues/29
 * An intro to AsyncWrap by Trevor Norris: http://blog.trevnorris.com/2015/02/asyncwrap-tutorial-introduction.html (outdated)
 * Slides from a local talk Andreas Madsen did on AsyncWrap:
 https://github.com/AndreasMadsen/talk-async-wrap (outdated)
-* There was also some discussion in [issue #21](https://github.com/nodejs/tracing-wg/issues/21#issuecomment-142727693).
 * Complete (hopefully) long-stack-trace module that uses AsyncWrap: https://github.com/AndreasMadsen/trace
-* Visualization tool for AsyncWrap wrap: https://github.com/AndreasMadsen/dprof
+* Visualization tool for AsyncWrap: https://github.com/AndreasMadsen/dprof
 
 ----
 
