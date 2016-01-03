@@ -16,6 +16,14 @@ involved in the AsyncWrap API._
 
 For the remaining description the API part is what is meant by AsyncWrap.
 
+## Table of Content
+
+* [Handle Objects](#handle-objects)
+* [The API](#the-api)
+* [Example](#example)
+* [Things You Might Not Expect](#things-you-might-not-expect)
+* [Resources](#resources)
+
 ## Handle Objects
 
 AsyncWrap emits events (hooks) that inform the consumer about the life of all
@@ -42,24 +50,32 @@ req.port = port;
 const socket = new TCP();
 socket.onread = onread;
 socket.connect(req, address, port);
+
+// later
+socket.destroy();
 ```
 
-The first one (`TCPConnectWrap`) is for connecting the socket, the second
-one (`TCP`) is for maintaining the connection.
+The first handle object (`TCPConnectWrap`) is for connecting the socket, the
+second one (`TCP`) is for maintaining the connection.
 
 `TCPConnectWrap` gets its information by setting properties on the handle
 object, like `address` and `port`. Those properties are read by the C++ layer,
 but can also be inspected from the AsyncWrap hooks. When the handle is created
 using `new TCPConnectWrap()` the `init` hook is called.
 
-A `oncomplete` property is also set, this is the callback for when the
-connection is made or failed. Just before calling `oncomplete` the `before` hook
-is called, just after the `after` hook is called.
+An `oncomplete` property is also set, this is the callback for when the
+connection is made or failed. Just before calling `oncomplete` the `pre` hook
+is called, just after the `post` hook is called.
 
 The `TCP` handle works exactly the same way, except that the information
 is passed as arguments to a method `.connect` and the `onread` function
 is called multiple times, thus it behaves like an event. This also means that
-the `before` and `after` hooks are called multiple times.
+the `pre` and `post` hooks are called multiple times.
+
+At some later time the `socket.destroy()` is called, this will call the
+`destroy` hook for the `socket` handle. Other handle objects aren't explicitly
+destroyed, in that case the `destroy` hook is called when the handle object is
+garbage collected by v8.
 
 Thus one should expect the hooks be called in the following order:
 
@@ -67,16 +83,20 @@ Thus one should expect the hooks be called in the following order:
 init // TCPConnectWrap
 init // TCP
 === tick ===
-before // TCPConnectWrap
-after // TCPConnectWrap
+pre // TCPConnectWrap
+post // TCPConnectWrap
 === tick ===
-before // TCP
-after // TCP
+pre // TCP
+post // TCP
 === tick ===
-before // TCP
-after // TCP
+pre // TCP
+post // TCP
 === tick ===
 ...
+=== tick ===
+destroy // TCP
+=== tick ===
+destroy // TCPConnectWrap
 ```
 
 _tick_ indicates there is at least one tick (as in `process.nextTick()`) between
@@ -97,14 +117,15 @@ if it's just patch update._
 To assign the hooks call:
 
 ```javascript
-asyncWrap.setupHooks(init, before, after);
-function init(provider, parent) { /* consumer code */ }
-function before() { /* consumer code */ }
-function after() { /* consumer code */ }
+asyncWrap.setupHooks(init, pre, post, destroy);
+function init(provider, uid, parent) { /* consumer code */ }
+function pre() { /* consumer code */ }
+function post() { /* consumer code */ }
+function destroy(uid) { /* consumer code */ }
 ```
 
-Note that calling `asyncWrap.setupHooks` again, will overwrite the previous
-hooks.
+Note that only the `init` function is required and that calling
+`asyncWrap.setupHooks` again will overwrite the previous hooks.
 
 #### Enable And Disable
 
@@ -131,25 +152,33 @@ asyncWrap.disable();
 
 #### The Hooks
 
-Currently there are 3 hooks: `init`, `before` and `after`. The function
-signatures are quite similar. The `this` variable refers to the handle object,
-and `init` hook has two extra arguments `provider` and `parent`.
+Currently there are 4 hooks: `init`, `pre`, `post` `destroy`. The `this`
+variable refers to the handle object. The `init` hook has three extra arguments
+`provider`, `uid` and `parent`. The `destroy` hook also has the `uid` argument.
 
 ```javascript
-function init(provider, parent) { }
-function before() {  }
-function after() { }
+function init(provider, uid, parent) { }
+function pre() { }
+function post() { }
+function destroy(uid) { }
 ```
 
 ##### this
-In all cases the `this` variable is the handle object. Users may read properties
-from this object such as `port` and `address` in the `TCPConnectWrap` case,
-or set user specific properties. However in the `init` hook the object is not
-yet fully constructed, thus some properties are not safe to read. This causes
-problems when doing `util.inspect(this)` or similar.
+
+In the `init`, `pre` and `post` cases the `this` variable is the handle object.
+Users may read properties from this object such as `port` and `address` in the
+`TCPConnectWrap` case, or set user specific properties.
+
+In the `init` hook the handle object is not yet fully constructed, thus some
+properties are not safe to read. This causes problems when doing
+`util.inspect(this)` or similar.
+
+In the `destroy` hook `this` is `null`, this is because the handle objects has
+been deleted by the garbage collector and thus doesn't exists.
 
 ##### provider
-This is an integer that refer to names defined in an `asyncWrap.Providers`
+
+This is an integer that refer to names defined in the `asyncWrap.Providers`
 object map.
 
 At the time of writing this is the current list:
@@ -180,6 +209,13 @@ At the time of writing this is the current list:
   ZLIB: 22 }
 ```
 
+##### uid
+
+The `uid` is a unique integer that identify each handle object. Because the
+`destroy` hook isn't called with the handle object, this is particular useful
+for storing information related to the handle object, that the user require in
+the `destroy` hook.
+
 ##### parent
 
 In some cases the handle was created from another handle object. In those
@@ -191,15 +227,14 @@ but when receiving new connection it creates another `TCP` handle that is
 responsible for the new socket. It does this before emitting the `onconnection`
 handle event, thus the asyncWrap hooks are called in the following order:
 
-```
 ```javascript
 init // TCP (socket)
-before // TCP (server)
-after // TCP (server)
+pre // TCP (server)
+post // TCP (server)
 ```
 
 This means it is not possible to know in what handle context the new socket
-handle was created using the `before` and `after` hooks. However the
+handle was created using the `pre` and `post` hooks. However the
 `parent` argument provides this information.
 
 ## Example
@@ -209,13 +244,13 @@ A classic use case for AsyncWrap is to create a long-stack-trace tool.
 ```javascript
 const asyncWrap = process.binding('async_wrap');
 
-asyncWrap.setupHooks(init, before, after);
+asyncWrap.setupHooks(init, pre, post);
 asyncWrap.enable();
 
 // global state variable, that contains the current stack trace
 let currentStack = '';
 
-function init(provider, parent) {
+function init(provider, uid, parent) {
   // When a handle is created, collect the stack trace such that we later
   // can see what involved the handle constructor.
   const localStack = (new Error()).stack.split('\n').slice(1).join('\n');
@@ -225,13 +260,13 @@ function init(provider, parent) {
   const extraStack = parent ? parent._full_init_stack : currentStack;
   this._full_init_stack = localStack + '\n' + extraStack;
 }
-function before() {
+function pre() {
   // A callback is about to be called, update the `currentStack` such that
   // it is correct for when another handle is initialized or `getStack` is
   // called.
   currentStack = this._full_init_stack;
 }
-function after() {
+function post() {
   // At the time of writing there are some odd cases where there is no handle
   // context, this line prevents that from resulting in wrong stack trace. But
   // the stack trace will be shorter compared to what ideally should happen.
@@ -272,12 +307,12 @@ for how to do it.
 
 ## Resources
 
+* Status overview of AsyncWrap: https://github.com/nodejs/tracing-wg/issues/29
 * An intro to AsyncWrap by Trevor Norris: http://blog.trevnorris.com/2015/02/asyncwrap-tutorial-introduction.html (outdated)
 * Slides from a local talk Andreas Madsen did on AsyncWrap:
 https://github.com/AndreasMadsen/talk-async-wrap (outdated)
-* There was also some discussion in [issue #21](https://github.com/nodejs/tracing-wg/issues/21#issuecomment-142727693).
 * Complete (hopefully) long-stack-trace module that uses AsyncWrap: https://github.com/AndreasMadsen/trace
-* Visualization tool for AsyncWrap wrap: https://github.com/AndreasMadsen/dprof
+* Visualization tool for AsyncWrap: https://github.com/AndreasMadsen/dprof
 
 ----
 

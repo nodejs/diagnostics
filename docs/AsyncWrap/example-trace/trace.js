@@ -8,7 +8,7 @@ asyncWrap.enable();
 // global state variable, that contains the current stack trace
 let currentStack = '';
 
-function init(provider, parent) {
+function init(provider, uid, parent) {
   // When a handle is created, collect the stack trace such that we later
   // can see what involved the handle constructor.
   const localStack = (new Error()).stack.split('\n').slice(1).join('\n');

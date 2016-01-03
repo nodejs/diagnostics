@@ -2,7 +2,7 @@
 
 const fs = require('fs');
 const net = require('net');
-const getStack = require('./example-trace.js');
+const getStack = require('./trace.js');
 
 Error.stackTraceLimit = Infinity;
 
