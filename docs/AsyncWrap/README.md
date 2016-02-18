@@ -118,9 +118,9 @@ To assign the hooks call:
 
 ```javascript
 asyncWrap.setupHooks(init, pre, post, destroy);
-function init(provider, uid, parent) { /* consumer code */ }
-function pre() { /* consumer code */ }
-function post() { /* consumer code */ }
+function init(uid, provider, parentUid, parentHandle) { /* consumer code */ }
+function pre(uid) { /* consumer code */ }
+function post(uid) { /* consumer code */ }
 function destroy(uid) { /* consumer code */ }
 ```
 
@@ -153,13 +153,13 @@ asyncWrap.disable();
 #### The Hooks
 
 Currently there are 4 hooks: `init`, `pre`, `post` `destroy`. The `this`
-variable refers to the handle object. The `init` hook has three extra arguments
-`provider`, `uid` and `parent`. The `destroy` hook also has the `uid` argument.
+variable refers to the handle object, they all have a `uid` argument, finally
+`init` provides extra information about the creation of the handle object.
 
 ```javascript
-function init(provider, uid, parent) { }
-function pre() { }
-function post() { }
+function init(uid, provider, parentUid, parentHandle) { }
+function pre(uid) { }
+function post(uid) { }
 function destroy(uid) { }
 ```
 
@@ -167,7 +167,7 @@ function destroy(uid) { }
 
 In the `init`, `pre` and `post` cases the `this` variable is the handle object.
 Users may read properties from this object such as `port` and `address` in the
-`TCPConnectWrap` case, or set user specific properties.
+`TCPConnectWrap` case.
 
 In the `init` hook the handle object is not yet fully constructed, thus some
 properties are not safe to read. This causes problems when doing
@@ -211,16 +211,20 @@ At the time of writing this is the current list:
 
 ##### uid
 
-The `uid` is a unique integer that identify each handle object. Because the
-`destroy` hook isn't called with the handle object, this is particular useful
-for storing information related to the handle object, that the user require in
-the `destroy` hook.
+The `uid` is a unique integer that identifies each handle object. You can use
+the `uid` to store information related to the handle object, by using it as
+a key for a shared `Map` object.
 
-##### parent
+As such the user could also store information on the `this` object, but this
+may be unsafe since the user could accidentally overwrite an undocumented
+property. The `this` object is also not available in the `destroy` hook, thus
+the `uid` is generally the recommended choice.
+
+##### parentUid
 
 In some cases the handle was created from another handle object. In those
-cases the `parent` argument is set the creating handle object. If there is
-no parent handle then it is just `null`.
+cases the `parentUid` argument is set to the uid of the creating handle object.
+If there is no parent then it is just `null`.
 
 The most common case is the TCP server. The TCP server itself is a `TCP` handle,
 but when receiving new connection it creates another `TCP` handle that is
@@ -235,7 +239,11 @@ post // TCP (server)
 
 This means it is not possible to know in what handle context the new socket
 handle was created using the `pre` and `post` hooks. However the
-`parent` argument provides this information.
+`parentUid` argument provides this information.
+
+##### parentHandle
+
+This is similar to parentUid but is the actual parent handle object.
 
 ## Example
 
@@ -244,38 +252,47 @@ A classic use case for AsyncWrap is to create a long-stack-trace tool.
 ```javascript
 const asyncWrap = process.binding('async_wrap');
 
-asyncWrap.setupHooks(init, pre, post);
+asyncWrap.setupHooks(init, before, after, destroy);
 asyncWrap.enable();
 
-// global state variable, that contains the current stack trace
-let currentStack = '';
+// global state variable, that contains the stack traces and the current uid
+const stack = new Map();
+stack.set(-1, '');
 
-function init(provider, uid, parent) {
+let currentUid = -1;
+
+function init(uid, provider, parentUid, parentHandle) {
   // When a handle is created, collect the stack trace such that we later
   // can see what involved the handle constructor.
   const localStack = (new Error()).stack.split('\n').slice(1).join('\n');
 
-  // Compute the full stack and store it as a property on the handle object,
-  // such that it can be fetched later.
-  const extraStack = parent ? parent._full_init_stack : currentStack;
-  this._full_init_stack = localStack + '\n' + extraStack;
+  // Compute the full stack and store on the `Map` using the `uid` as key.
+  const extraStack = stack.get(parentUid || currentUid);
+  stack.set(uid, localStack + '\n' + extraStack);
 }
-function pre() {
-  // A callback is about to be called, update the `currentStack` such that
+function before(uid) {
+  // A callback is about to be called, update the `currentUid` such that
   // it is correct for when another handle is initialized or `getStack` is
   // called.
-  currentStack = this._full_init_stack;
+  currentUid = uid;
 }
-function post() {
+function after(uid) {
   // At the time of writing there are some odd cases where there is no handle
   // context, this line prevents that from resulting in wrong stack trace. But
   // the stack trace will be shorter compared to what ideally should happen.
-  currentStack = '';
+  currentUid = -1;
+}
+
+function destroy(uid) {
+  // Once the handle is destroyed no other handle objects can be created with
+  // this handle as its immediate context. Thus its associated stack can be
+  // deleted.
+  stack.delete(uid);
 }
 
 function getStack(message) {
   const localStack = new Error(message);
-  return localStack.stack + '\n' + currentStack;
+  return localStack.stack + '\n' + stack.get(currentUid);
 }
 module.exports = getStack;
 ```
