@@ -1,13 +1,24 @@
-Node.js tracing - native v8 tracing
-================================================================================
+## VM Native Tracing  
+- See [v8-tracing.md](./v8-tracing.md) for technical details and crude implementation.
 
-Google is restructuring the tracing in V8 to accommodate restructuring of
-tracing in Chrome.
+- All trace events are streamed through the same native component, which can in turn publish as appropriate to its subscribers.
+    - Ideally should be possible to subscribe and receive events in JavaScript too.
+- Requires implementation in Node.js, could learn from Chromium's implementation.
+- For maximum utility, we should add trace events to Node's operations, especially async ones.
+- Possible to handle other trace sources, such as OS (LTTng, ETW) alongside V8 trace source, since they all are event streams.
 
-----
+## Resources  
+- [google/trace-viewer](https://github.com/google/trace-viewer) - `chrome://tracing` UI.
+- [chromium/src/base/trace_event/](https://code.google.com/p/chromium/codesearch#chromium/src/base/trace_event/)
+- [Chromium Speed-Infra](https://www.chromium.org/developers/speed-infra)
+- [Chromium Telemetry](https://catapult.gsrc.io/telemetry)
+- [Trace Platform Explainer](https://docs.google.com/a/chromium.org/document/d/1l0N1B4L4D94andL1BY39Rs_yXU8ktJBrKbt9EvOb-Oc/edit)
+- [Implementations for V8, D8, Chromium](https://docs.google.com/a/chromium.org/document/d/1_4LAnInOB8tM_DLjptWiszRwa4qwiSsDzMkO4tU-Qes/edit#)
+- [Trace Event Format](https://docs.google.com/document/d/1CvAClvFfyA5R-PhYUmn5OOQtYMH4h6I0nSsKchNAySU/edit)
 
-Some older-ish comments from @natduca in
-[nodejs/node issue #671](https://github.com/nodejs/node/issues/671#issuecomment-73191538):
+### Background  
+
+@natduca in [nodejs/node#671_comment](https://github.com/nodejs/node/issues/671#issuecomment-73191538):
 
 I thought I'd provide some notes on the direction we're taking in chrome and indirectly v8 around tracing & stack sampling. Since we both intersect at v8 and do run into some of the same "guhh i need a tracing api but its gotta be low overhead," I hope there's some useful context!
 
@@ -37,8 +48,7 @@ Anyway, thats a lotta words. Hope it makes sense! This was all designed with cli
 
 ----
 
-@ofrobots added some additional detail in
-[issue #21](https://github.com/nodejs/tracing-wg/issues/21#issuecomment-143891637):
+@ofrobots in [nodejs/tracing-wg#21_comment](https://github.com/nodejs/tracing-wg/issues/21#issuecomment-143891637):
 
 Here are the main components, as per my understanding:
 
@@ -54,6 +64,3 @@ Basically this trace-event buffer becomes the 'single pipe' through all trace-ev
 
 Once the above linked CL lands, traces being gathered in V8 will show up there. Node.js can start putting its own traces into the same pipe. I would imagine we would also need an API in Node.js to be exposed to JavaScript to allow JS code to start sending the trace events.
 
-----
-
-If you have more info to provide, please send us a pull request!
