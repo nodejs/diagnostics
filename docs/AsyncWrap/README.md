@@ -252,7 +252,10 @@ A classic use case for AsyncWrap is to create a long-stack-trace tool.
 ```javascript
 const asyncWrap = process.binding('async_wrap');
 
+// bevore node version 6
 asyncWrap.setupHooks(init, before, after, destroy);
+// starting with node version 6
+asyncWrap.setupHooks({init, before, after, destroy});
 asyncWrap.enable();
 
 // global state variable, that contains the stack traces and the current uid
