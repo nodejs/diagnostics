@@ -117,10 +117,10 @@ if it's just patch update._
 To assign the hooks call:
 
 ```javascript
-asyncWrap.setupHooks(init, pre, post, destroy);
+asyncWrap.setupHooks({init, pre, post, destroy});
 function init(uid, provider, parentUid, parentHandle) { /* consumer code */ }
 function pre(uid) { /* consumer code */ }
-function post(uid) { /* consumer code */ }
+function post(uid, didThrow) { /* consumer code */ }
 function destroy(uid) { /* consumer code */ }
 ```
 
@@ -153,13 +153,14 @@ asyncWrap.disable();
 #### The Hooks
 
 Currently there are 4 hooks: `init`, `pre`, `post` `destroy`. The `this`
-variable refers to the handle object, they all have a `uid` argument, finally
+variable refers to the handle object, they all have a `uid` argument. `post`
+provides information about the execution of the callback. Finally
 `init` provides extra information about the creation of the handle object.
 
 ```javascript
 function init(uid, provider, parentUid, parentHandle) { }
 function pre(uid) { }
-function post(uid) { }
+function post(uid, didThrow) { }
 function destroy(uid) { }
 ```
 
@@ -245,6 +246,11 @@ handle was created using the `pre` and `post` hooks. However the
 
 This is similar to parentUid but is the actual parent handle object.
 
+##### didThrow
+
+If the callback threw, but the process was allowed to continue due to either
+`uncaughtException` or the `domain` module, then `didThrow` will be true.
+
 ## Example
 
 A classic use case for AsyncWrap is to create a long-stack-trace tool.
@@ -252,7 +258,7 @@ A classic use case for AsyncWrap is to create a long-stack-trace tool.
 ```javascript
 const asyncWrap = process.binding('async_wrap');
 
-asyncWrap.setupHooks(init, before, after, destroy);
+asyncWrap.setupHooks({init, pre, post, destroy});
 asyncWrap.enable();
 
 // global state variable, that contains the stack traces and the current uid
@@ -270,13 +276,13 @@ function init(uid, provider, parentUid, parentHandle) {
   const extraStack = stack.get(parentUid || currentUid);
   stack.set(uid, localStack + '\n' + extraStack);
 }
-function before(uid) {
+function pre(uid) {
   // A callback is about to be called, update the `currentUid` such that
   // it is correct for when another handle is initialized or `getStack` is
   // called.
   currentUid = uid;
 }
-function after(uid) {
+function post(uid, didThrow) {
   // At the time of writing there are some odd cases where there is no handle
   // context, this line prevents that from resulting in wrong stack trace. But
   // the stack trace will be shorter compared to what ideally should happen.

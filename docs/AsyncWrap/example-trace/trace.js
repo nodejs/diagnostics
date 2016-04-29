@@ -2,7 +2,7 @@
 
 const asyncWrap = process.binding('async_wrap');
 
-asyncWrap.setupHooks(init, before, after, destroy);
+asyncWrap.setupHooks({init, pre, post, destroy});
 asyncWrap.enable();
 
 // global state variable, that contains the stack traces and the current uid
@@ -20,13 +20,13 @@ function init(uid, provider, parentUid, parentHandle) {
   const extraStack = stack.get(parentUid || currentUid);
   stack.set(uid, localStack + '\n' + extraStack);
 }
-function before(uid) {
+function pre(uid) {
   // A callback is about to be called, update the `currentUid` such that
   // it is correct for when another handle is initialized or `getStack` is
   // called.
   currentUid = uid;
 }
-function after(uid) {
+function post(uid, didThrow) {
   // At the time of writing there are some odd cases where there is no handle
   // context, this line prevents that from resulting in wrong stack trace. But
   // the stack trace will be shorter compared to what ideally should happen.
