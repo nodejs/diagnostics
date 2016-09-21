@@ -22,7 +22,6 @@ Work needed includes:
 * @bnoordhuis 
 * @sam-github 
 * @othiym23 
-* @Wraithan 
 * @groundwater 
 * @brycebaril 
 * @trevnorris 
