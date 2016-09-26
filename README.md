@@ -43,4 +43,5 @@ Work needed includes:
 * @pmuellr
 * @jeffolfert
 * @joshgav
+* @danielkhan
 
