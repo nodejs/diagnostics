@@ -314,9 +314,9 @@ creates the `TCP` handle when `.listen` is called and it may perform an DNS
 lookup before that.
 
 * `console.log` is async and thus invokes AsyncWrap, thus using `console.log`
-inside one of the hooks, creates an infinite recursion. Use `fs.syncWrite(1, msg)`
+inside one of the hooks, creates an infinite recursion. Use `fs.writeSync(1, msg)`
 or `process._rawDebug(msg)` instead. The latter is a little nicer because it
-uses `util.inspect`. On the other hand `fs.syncWrite` is a documented function.
+uses `util.inspect`. On the other hand `fs.writeSync` is a documented function.
 
 * `process.nextTick` never creates a handle object. You will have to monkey patch
 this.
