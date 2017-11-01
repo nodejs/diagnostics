@@ -42,7 +42,6 @@ Work needed includes:
 * @matthewloring
 * @pmuellr
 * @jeffolfert
-* @joshgav
 * @danielkhan
 * @Fishrock123
 * @naugtur
