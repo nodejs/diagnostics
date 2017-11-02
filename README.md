@@ -39,7 +39,6 @@ Work needed includes:
 * @thekemkid
 * @piscisaureus
 * @ofrobots
-* @matthewloring
 * @pmuellr
 * @jeffolfert
 * @danielkhan
