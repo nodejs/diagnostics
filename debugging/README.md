@@ -6,7 +6,7 @@ Node currently relies on V8's internal Debug API and associated commands and eve
 
 Node also provides an agent [node/src/debug-agent.h](https://github.com/blob/master/src/debug-agent.h) which relays requests, responses, and events through a TCP socket, and a command-line debugger [node/lib/_debugger.js](https://github.com/blob/master/lib/_debugger.js).
 
-The Chrome/V8 team has deprecated the internal V8 API and command set and proposed replacing it with a subset of the Chrome Debugging Protocol (CrDP), see https://github.com/nodejs/node/issues/2546. CrDP is documented at [https://chromedevtools.github.io/debugger-protocol-viewer/]() and the backing GitHub repo.
+The Chrome/V8 team has deprecated the internal V8 API and command set and proposed replacing it with a subset of the Chrome Debugging Protocol (CrDP), see https://github.com/nodejs/node/issues/2546. CrDP is documented at [https://chromedevtools.github.io/debugger-protocol-viewer/](https://chromedevtools.github.io/devtools-protocol/) and the backing GitHub repo.
 
 The [cyrus-and/chrome-remote-interface](https://github.com/cyrus-and/chrome-remote-interface) library provides a JS proxy for CrDP.
 
