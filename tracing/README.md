@@ -1,5 +1,5 @@
 ## Tracing  
-- [AsyncWrap](./AsyncWrap/README.md) - Most native objects are represented indirectly by the [AsyncWrap class](https://github.com/nodejs/node/blob/master/src/async-wrap.h), so hooks have been added to that class to trace lifecycle (init/destroy) and callback activity (pre/post) related to these objects.
+- [AsyncHooks](https://nodejs.org/api/async_hooks.html) - Tracks the lifetime of asynconuse requests (init/destroy) and their callback activity (before/after)
 
 - [OS Tracing](./os-tracing/README.md) - LTTng (Linux), SystemTap (Linux), DTrace (OSX), ETW (Windows)
 
