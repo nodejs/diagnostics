@@ -16,3 +16,4 @@ Module | Embedder API | Note
 -------|--------------|------
 [bluebird](https://github.com/petkaantonov/bluebird) | [PR#1472](https://github.com/petkaantonov/bluebird/pull/1472) |
 [generic-pool](https://github.com/coopernurse/node-pool) | No | Used by a lot of database modules like for instance "pg"
+[mongoose](https://github.com/Automattic/mongoose/) | [#5929](https://github.com/Automattic/mongoose/issues/5929) | Most popular MongoDB DRM that implements its own user-land queueing.
