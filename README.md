@@ -18,33 +18,30 @@ Work needed includes:
 - Monthly Meetings
 - Biannual F2F
 
-### Members  
-* [@bnoordhuis](https://github.com/bnoordhuis)
-* [@sam-github](https://github.com/sam-github)
-* [@othiym23](https://github.com/othiym23)
-* [@groundwater](https://github.com/groundwater)
-* [@brycebaril](https://github.com/brycebaril)
-* [@trevnorris](https://github.com/trevnorris)
-* [@Qard](https://github.com/Qard)
-* [@hayes](https://github.com/hayes)
-* [@lykkin](https://github.com/lykkin)
-* [@thlorenz](https://github.com/thlorenz)
-* [@mikeal](https://github.com/mikeal)
-* [@rvagg](https://github.com/rvagg)
-* [@AndreasMadsen](https://github.com/AndreasMadsen)
-* [@watson](https://github.com/watson)
-* [@rmg](https://github.com/rmg)
-* [@domenic](https://github.com/domenic)
-* [@dberesford](https://github.com/dberesford)
-* [@thekemkid](https://github.com/thekemkid)
-* [@piscisaureus](https://github.com/piscisaureus)
-* [@ofrobots](https://github.com/ofrobots)
-* [@pmuellr](https://github.com/pmuellr)
-* [@jeffolfert](https://github.com/jeffolfert)
-* [@danielkhan](https://github.com/danielkhan)
-* [@Fishrock123](https://github.com/Fishrock123)
-* [@naugtur](https://github.com/naugtur)
-* [@jkrems](https://github.com/jkrems)
-* [@mike-kaufman](https://github.com/mike-kaufman)
-* [@kjin](https://github.com/kjin)
-* [@mhdawson](https://github.com/mhdawson)
+### Members 
+
+<!-- ncu-team-sync.team(nodejs/diagnostics) -->
+
+- [@AndreasMadsen](https://github.com/AndreasMadsen) - Andreas Madsen
+- [@bnoordhuis](https://github.com/bnoordhuis) - Ben Noordhuis
+- [@brycebaril](https://github.com/brycebaril) - Bryce Baril
+- [@dberesford](https://github.com/dberesford) - Damian Beresford
+- [@Fishrock123](https://github.com/Fishrock123) - Jeremiah Senkpiel
+- [@jkrems](https://github.com/jkrems) - Jan Olaf Krems
+- [@kjin](https://github.com/kjin) - Kelvin Jin
+- [@mhdawson](https://github.com/mhdawson) - Michael Dawson
+- [@mike-kaufman](https://github.com/mike-kaufman) - Mike Kaufman
+- [@ofrobots](https://github.com/ofrobots) - Ali Ijaz Sheikh
+- [@othiym23](https://github.com/othiym23) - Forrest L Norvell
+- [@piscisaureus](https://github.com/piscisaureus) - Bert Belder
+- [@pmuellr](https://github.com/pmuellr) - Patrick Mueller
+- [@Qard](https://github.com/Qard) - Stephen Belanger
+- [@rmg](https://github.com/rmg) - Ryan Graham
+- [@sam-github](https://github.com/sam-github) - Sam Roberts
+- [@thekemkid](https://github.com/thekemkid) - Glen Keane
+- [@thlorenz](https://github.com/thlorenz) - Thorsten Lorenz
+- [@trevnorris](https://github.com/trevnorris) - Trevor Norris
+- [@watson](https://github.com/watson) - Thomas Watson
+- [@yunong](https://github.com/yunong) - Yunong Xiao
+
+<!-- ncu-team-sync end -->
