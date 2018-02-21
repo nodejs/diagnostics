@@ -25,12 +25,23 @@ Work needed includes:
 - [@AndreasMadsen](https://github.com/AndreasMadsen) - Andreas Madsen
 - [@bnoordhuis](https://github.com/bnoordhuis) - Ben Noordhuis
 - [@brycebaril](https://github.com/brycebaril) - Bryce Baril
+- [@cjihrig](https://github.com/cjihrig) - Colin Ihrig
+- [@danielkhan](https://github.com/danielkhan) - Daniel Khan
 - [@dberesford](https://github.com/dberesford) - Damian Beresford
 - [@Fishrock123](https://github.com/Fishrock123) - Jeremiah Senkpiel
+- [@Flarna](https://github.com/Flarna) - Gerhard Stöbich
+- [@hashseed](https://github.com/hashseed) - Yang Guo
+- [@hekike](https://github.com/hekike) - Peter Marton
+- [@Hollerberg](https://github.com/Hollerberg) - Gernot Reisinger
+- [@jasnell](https://github.com/jasnell) - James M Snell
 - [@jkrems](https://github.com/jkrems) - Jan Olaf Krems
+- [@joyeecheung](https://github.com/joyeecheung) - Joyee Cheung
 - [@kjin](https://github.com/kjin) - Kelvin Jin
+- [@mcollina](https://github.com/mcollina) - Matteo Collina
 - [@mhdawson](https://github.com/mhdawson) - Michael Dawson
 - [@mike-kaufman](https://github.com/mike-kaufman) - Mike Kaufman
+- [@mmarchini](https://github.com/mmarchini) - Matheus Marchini
+- [@naugtur](https://github.com/naugtur) - Zbyszek Tenerowicz
 - [@ofrobots](https://github.com/ofrobots) - Ali Ijaz Sheikh
 - [@othiym23](https://github.com/othiym23) - Forrest L Norvell
 - [@piscisaureus](https://github.com/piscisaureus) - Bert Belder
