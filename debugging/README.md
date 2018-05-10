@@ -1,6 +1,6 @@
 ## Debugging API
 - [Chrome Remote Debugging Protocol](https://chromedevtools.github.io/debugger-protocol-viewer/v8/) (alias V8 Inspector)
-- [V8 Debugging Protocol](https://github.com/buggerjs/bugger-v8-client/blob/master/PROTOCOL.md) (official link has been removed since deprecated)
+- [V8 Debugging Protocol](https://github.com/v8/v8/wiki/Debugging-Protocol/a4990503824b4e37d1d5f6d95800534c52262710) (deprecated in favor of V8 Inspector)
 
 Depending on the Node version you are using, you can use either one of the above API : 
 
@@ -23,10 +23,10 @@ Node relied on V8's internal Debug API and associated commands and events. This 
 Note that this API has been deprecated then later removed, so the links above are in the **V8 5.4 branch**.
 
 ## Debugging Tools  
-Name | Sponsor | Protocol Used | State |
+Name | Sponsor | Protocol available | State |
 -----|--------|------|------|
 [Node CLI Debugger][] | Node Foundation | Both | Up to date
-[Chrome DevTools][] | Google | Both | Up to date
+[Chrome DevTools][] | Google | V8 inspector | Up to date
 [Visual Studio Code][] | Microsoft | Both | Up to date
 [JetBrains WebStorm][] | JetBrains | Both | Up to date
 [node-inspector][] | StrongLoop | V8 Debugging Protocol | Deprecated
