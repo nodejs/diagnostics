@@ -1,24 +1,36 @@
 ## Debugging API
-- [Chrome Debugging Protocol](https://chromedevtools.github.io/debugger-protocol-viewer/)
-- [V8 Debugging Protocol](https://github.com/v8/v8/wiki/Debugging-Protocol)
+- [Chrome Remote Debugging Protocol](https://chromedevtools.github.io/debugger-protocol-viewer/v8/) (alias V8 Inspector)
+- [V8 Debugging Protocol](https://github.com/v8/v8/wiki/Debugging-Protocol/a4990503824b4e37d1d5f6d95800534c52262710) (deprecated in favor of V8 Inspector)
 
-Node currently relies on V8's internal Debug API and associated commands and events. The Debug API is published at [v8/include/v8-debug.h](https://github.com/v8/v8/blob/master/include/v8-debug.h), and the message protocol is documented in prose in [the V8 wiki](https://github.com/v8/v8/wiki/Debugging-Protocol) and in code in [v8/src/debug/debug.js#L2341-2372](https://github.com/v8/v8/blob/master/src/debug/debug.js#L2341-L2372). 
+Depending on the Node version you are using, you can use either one of the above API : 
 
-Node also provides an agent [node/src/debug-agent.h](https://github.com/blob/master/src/debug-agent.h) which relays requests, responses, and events through a TCP socket, and a command-line debugger [node/lib/_debugger.js](https://github.com/blob/master/lib/_debugger.js).
+#### Node >= 8
 
-The Chrome/V8 team has deprecated the internal V8 API and command set and proposed replacing it with a subset of the Chrome Debugging Protocol (CrDP), see https://github.com/nodejs/node/issues/2546. CrDP is documented at [https://chromedevtools.github.io/debugger-protocol-viewer/](https://chromedevtools.github.io/devtools-protocol/) and the backing GitHub repo.
+Starting from Node 8, the core provide the `inspector` module that allow to communicate with V8 via the [CrDP protocol](https://chromedevtools.github.io/debugger-protocol-viewer/v8/).
+You can find the latest node documentation [here](https://github.com/nodejs/node/blob/master/doc/api/inspector.md)
+A guide made by the node foundation is also available [here](https://nodejs.org/en/docs/guides/debugging-getting-started/)
 
-The [cyrus-and/chrome-remote-interface](https://github.com/cyrus-and/chrome-remote-interface) library provides a JS proxy for CrDP.
 
-## Step Debugging Tools  
-Name | Sponsor
------|--------
-[node-inspector][] | StrongLoop
-[JetBrains WebStorm][] | JetBrains
-[Visual Studio Code][] | Microsoft
-[Node CLI Debugger][] | Node Foundation
-[Chrome DevTools][] | Google
-[Theseus][] | Adobe Research
+#### Node >= 6.3.0 && Node < 8
+
+Node 6.3.0 has seen the new V8 Inspector [implemented](https://github.com/nodejs/node/pull/6792) but only via the `--inspect` and `--inspect-brk` flag. You can find more information in the node documentation [here](https://nodejs.org/docs/latest-v6.x/api/debugger.html#debugger_v8_inspector_integration_for_node_js)
+
+Note that the old V8 Debugging Protocol was available and used as the main debugger protocol as this time (except for the new flags of course), see below for more informations
+
+#### Node < 6.3.0
+
+Node relied on V8's internal Debug API and associated commands and events. This Debug API was published at [v8/include/v8-debug.h](https://github.com/v8/v8/blob/5.4-lkgr/include/v8-debug.h) and in code in [here](https://github.com/v8/v8/blob/5.4-lkgr/src/debug/debug.js#L2333).
+Note that this API has been deprecated then later removed, so the links above are in the **V8 5.4 branch**.
+
+## Debugging Tools  
+Name | Sponsor | Protocol available | State |
+-----|--------|------|------|
+[Node CLI Debugger][] | Node Foundation | Both | Up to date
+[Chrome DevTools][] | Google | V8 inspector | Up to date
+[Visual Studio Code][] | Microsoft | Both | Up to date
+[JetBrains WebStorm][] | JetBrains | Both | Up to date
+[node-inspector][] | StrongLoop | V8 Debugging Protocol | Deprecated
+[Theseus][] | Adobe Research | V8 Debugging Protocol | Not Maintained
 
 [node-inspector]: https://github.com/node-inspector/node-inspector 
 [JetBrains WebStorm]: https://www.jetbrains.com/help/webstorm/2016.1/running-and-debugging-node-js.html
