@@ -14,6 +14,25 @@ Work needed includes:
 - Collect and document projects and products providing diagnostics for Node with brief description of their technical architecture and sponsoring organizations.
 - Identify opportunities and gaps, then propose and implement solutions.
 
+### Current Initiatives
+
+| Initiative           | Champion                                         | Stakeholders                            | Links                                            |
+|----------------------|--------------------------------------------------|-----------------------------------------|--------------------------------------------------|
+| Diagnostic Channel   | [@qard](https://github.com/qard)                 |                                         | https://github.com/nodejs/diagnostics/issues/180 |
+| Async Hooks          | [@ofrobots](https://github.com/ofrobots)         |                                         | https://github.com/nodejs/diagnostics/issues/124 |
+| Async Context        | [@mike-kaufman](https://github.com/mike-kaufman) | [@kjin](https://github.com/kjin)        | https://github.com/nodejs/diagnostics/issues/107 |
+
+#### Need volunteers for
+
+| Initiative            | Champion      | Links                                            |
+|-----------------------|---------------|--------------------------------------------------|
+| CPU Profiling         |               | https://github.com/nodejs/diagnostics/issues/148 |
+| Support tiers         |               | https://github.com/nodejs/diagnostics/issues/157 |
+| Trace Events          |               | https://github.com/nodejs/diagnostics/issues/84  |
+| Performance Profiles  |               | https://github.com/nodejs/diagnostics/issues/161 |
+| Time-travel debugging |               | https://github.com/nodejs/diagnostics/issues/164 |
+| Platform neutrality   |               |                                                  |
+
 ### Logistics
 - Monthly Meetings
 - Biannual F2F
