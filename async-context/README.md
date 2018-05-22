@@ -12,7 +12,7 @@ This document defines "JavaScript Asynchronous Context".
 4.  Resulting Data Structures and APIs and should support solving common "async understanding" use cases (e.g., long stack traces, continuation local storage, visualizations, async error propogation, user-space queueing...)
 
 ## A Simple Example
-We'll start with a simple example that is not controversial. Most JS programmers should have an intuitive understanding of where the async boundaries are in this code.  We'll build off of this example going forward.
+We'll start with a simple example that is not controversial. Most JS programmers should have an intuitive understanding of where the async boundaries are in this code.  We'll build off of this example going forward.  Implicit in this example is an undefined concept of "async context".  We'll build stronger definitions later on, but for now, we'll use "async context" to refer to JS programmers' colloquial understanding of asynchonrous function calls.
 
 ```javascript
 function f1() {
@@ -29,14 +29,13 @@ function f1() {
 ```
 
 There are two interesting constructs in the above example:
-  -  First, the function `f2` is a function created in one "async context" and passed through an API.  When `f2` is invoked later, it is a "logical continuation" of the "context" in which it was created.
+  - First, the function `f2` is a function created in one "async context" and passed through an API.  When `f2` is invoked later, it is a "logical continuation" of the "context" in which it was created.
   - Second, the function `setInterval` takes a function as a parameter, and invokes that function later during program execution, after `setInterval` has completed.
 
-Let's give these two concepts some names and some loose definitions:
+Let's give these two concepts some names and some initial definitions:
 
-   -  A `Continuation` is a JavaScript function.  A `Continuation` retains a link to the "async context" in which it is created.  Upon invocation, it will "logically continue" the "async context" in which it was created.
-
-   - A `Continuation Point` - is a function that accepts a `Continuation` as a parameter.  This logically represents an async boundary; functions passed to a `Continuation Point` are invoked at some later point in time.
+   - A **Continuation** is a JavaScript function that retains a link to the "async context" in which it is created.  Upon invocation, it will establish a new "async context", and will provide a "logical continuation" of the "async context" in which it was created.
+   - A **Continuation Point** - is a function that accepts a **Continuation** as a parameter.  This logically represents an async boundary; functions passed to a **Continuation Point** are invoked at some later point in time.
 
 ## A lower-level view
 
@@ -107,13 +106,12 @@ and
 ```
 
 
-Lets more formally define an `Continuation Invocation` as a specific invocation of a `continuation`; more precisely, a `Continuation Invocation` is the *period of time* where a `continuation` frame is on the stack.  As soon as the continuation frame pops off the stack, then that `Continuation Invocation` is completed.
-
-Note the following:
-  -  a `continuation` instance can have more than one `Continuation Invocation` instance associated with it.  For example, given our initial code sample with the call to `setInterval`, there will be precisely two `Continuation Invocation` instances associated with the `continuation` f2. 
-  -  in the pictures above, we've introduced a "Root Continuation" as the bottom frame.  This  illustrates a basic assumption that all code is executing in the context of a `Continuation Invocation`.  
-  - Multiple continuations can be in the stack.  For any given stack frame, the `current context` is the first `Continuation Invocation` below the given frame on the stack.
-
+Lets more formally define the event when a `Continuation` is invoked:
+  - A  **Continuation Invocation** is a specific invocation of a `continuation`; more precisely, a **Continuation Invocation** is the *period of time* where a `continuation` frame is on the stack.  As soon as the continuation frame pops off the stack, then that `Continuation Invocation` is completed.
+  - Note the following:
+    - A `continuation` instance can have more than one `Continuation Invocation` instance associated with it.  For example, given our initial code sample with the call to `setInterval`, there will be precisely two `Continuation Invocation` instances associated with the `continuation` f2. 
+    - in the pictures above, we've introduced a "Root Continuation" as the bottom frame.  This  illustrates a basic assumption that all code is executing in the context of a `Continuation Invocation`.  
+    - Multiple continuations can be in the stack.  For any given stack frame, the `current context` is the first `Continuation Invocation` below the given frame on the stack.
 
 We've updated our pictures of runtime callstacks with labels of the `Continuation Invocations`:
 
@@ -176,7 +174,7 @@ In this code example, we have:
     the initial code is executing in. 
   - four `Continuation Invocations`.
 
-We define the `Causal Context` (//TODO, `Ready Context`, `Resolve Context`???) for a promise as a reference from a `Continuation Invocation` associated with a Promise.then call, to the `Continuation Invocation` in which the preceding promise in the chain was resolved. 
+We define the `Causal Context` (//TODO, close on naming - `Ready Context`, `Resolve Context`???) for a promise as a reference from a `Continuation Invocation` associated with a Promise.then call, to the `Continuation Invocation` in which the preceding promise in the chain was resolved.
 
 For non-promise-based APIs, the `Causal Context` is the same as the `Link Context` (//TODO or should it be null/undefined?)
 
@@ -184,9 +182,9 @@ In our example above, the `Continuation Invocation` associated with `continuatio
 
 ## Crisper Definitions
 
-   - A `Continuation Point` - is a function that accepts a `Continuation` as a parameter.  This logically represents an async boundary; functions passed to a `Continuation Point` are invoked at some later point in time.
+  - **Continuation Point** - a function that accepts a `Continuation` as a parameter.  This logically represents an async boundary; functions passed to a `Continuation Point` are invoked at some later point in time.
 
-  - A `Continuation` is function that, when invoked, defines an `Continuation Invocation`, and maintains references to other related `Continuation Invocation` instances. Using TypeScript for descriptive purposes, a `Continuation` has the following shape:
+  - **Continuation** -  a function that, when invoked, creates a new `Continuation Invocation` instance, and maintains references to other related `Continuation Invocation` instances. Using TypeScript for descriptive purposes, a `Continuation` has the following shape:
 
     ```TypeScript
     interface Continuation {
@@ -194,7 +192,7 @@ In our example above, the `Continuation Invocation` associated with `continuatio
     }
     ```
 
-  -  `Continuation Invocation` - a specific invocation of a `Continuation`. A `Continuation Invocation` has the following shape in TypeScript:
+  -  **Continuation Invocation** - a specific invocation of a `Continuation`. A `Continuation Invocation` has the following shape in TypeScript:
 
     ```TypeScript
     interface ContinuationInvocation {
@@ -205,20 +203,22 @@ In our example above, the `Continuation Invocation` associated with `continuatio
     }
     ```
 
+  - **Async Call Graph** - A directed acyclic graph that results with the nodes as `Continuations` and `Continuation Invocations`, and edges as `linkingContext` and `causalContext` references.
+
 ### State of a Contiuation Invocation
 A `Continuation Invocation` can be in a number of states:
-  - `pending` - A record of a `Continuation Invocation` instance has been created, but is not yet executing, nor is it ready to execute.
+  - `pending` - A  `Continuation Invocation` instance has been created, but is not yet executing, nor is it ready to execute.
   - `ready` - A `Continuation Invocation` is ready to execute, but is not yet executing
   - `executing` - `Continuation Invocation` is currently executing on the stack
-  - `paused` - // todo - is this necessary for async/await & generators.  what is tc39 terminology?
+  - `paused` - A `Continuation Invocation` has started execution, but is not currently on the stack.  E.g., for generator functions. // todo - is this necessary for async/await & generators.  what is tc39 terminology?
   - `completed` - A `Continuation Invocation` instance is completed.  However, the instance, during execution, may have called other `Continuation Points` and those `Continuation Invocations` are still pending execution.
   - `collectable` - A `Continuation Invocation` instance is completed and all child-spawned continuations are in the collectable state.
 
 ## Where are the Continuation Points?
-The `Continuation Points` are defined by convention by the host environment.  The host, as part of this exercise needs logic to determine if a given argument is a function or a continuation, and if not yet a continuation, needs to "continuify" the parameter.  The host is also responsible for "pinning" any `Continuation` instances to prevent premature garbage collection.
+The `Continuation Points` are defined by convention by the host environment.  The host needs logic to determine if a given argument is a function or a continuation, and if not yet a continuation, needs to "continuify" the parameter.  The host is also responsible for "pinning" any `Continuation` instances to prevent premature garbage collection.
 
 ## A User-Space API
-Here is a user-space API that provides runtime access to the concepts defined above.  At any given time, there is a "current" `Continuation Invocation`, precisely defined as the `Continatuation Invocation` associated with the `Continuation` nearest to the top of the stack.  (Note: there can be more than one `Continuation` on the stack at any given time, for example, in the "user space queueing" examples).
+Here is a user-space API that provides runtime access to the concepts defined above.  At any given time, there is a "current" `Continuation Invocation`, precisely defined as the `Continatuation Invocation` associated with the `Continuation` nearest to the top of the stack.  (Note: there can be more than one `Continuation` on the stack at any given time, for example, in "user space queueing" examples).
 
 ```typescript
     interface ContinuationInvocation {
@@ -234,8 +234,26 @@ Here is a user-space API that provides runtime access to the concepts defined ab
 ```
 
 ## An Event Stream
-For post-mortem analysis, an event stream of async context events is useful.
-// TODO: pull event stream description/definition form mike-kaufman/async-context-definition
+For some post-mortem analysis scenarios, an event stream of async context events is useful.  Such an event stream can be used to define the graph.  The event stream is comprised of the following events: 
+
+  - **invocationCreated** - emitted when a `Continuation Invocation` instance is created.
+  - **executeBegin** - emitted when a  `Continuation Invocation` instance transitions to the `executing` state.  
+  - **executeEnd** - emitted when a  `Continuation Invocation` instance transitions to the `completed` state.
+  - **link** - emitted when a new `Continuation` instance is created.
+  - **ready** - emitted when a `Continuation Invocation` instance transitions to the `ready` state.
+
+The events above are JSON events and their schema is illustrated in the following example:
+
+```json
+{"event":"invocationCreated","invocationID":1, "continuationId":0}
+{"event":"executeBegin","invocationID":1}
+{"event":"link","continuationID":1}
+{"event":"invocationCreated", "invocationID":2, "continuationId":3}
+{"event":"cause","invocationId":2}
+{"event":"executeEnd", "invocationID":1}
+```
+
+// TODO: add better examples here. 
 
 ## Applications
 
@@ -273,7 +291,7 @@ class ContinuationLocalStorage {
 ### Async Error Propogation
 ```typescript
 /**
- *  simple error propagation across async boundaries
+ *  simple error propagation across async boundaries, following the "linking context"
  */
 class AsyncErrorPropogationStrategy {
     static AsyncThrow(err: Error) {
@@ -289,4 +307,49 @@ class AsyncErrorPropogationStrategy {
 }
 ```
 
+### Long Call Stacks
+A Long Call Stacks is a list of call stacks.  The entries in the list are captured at various times deemed interesting by the host environment.  Given that the Continuation implementation will be aware of when various events occur (e.g., `Continuation` instance construction), the implementation will be aware of when stacks need captured, and will expose APIs to toggle them.
 
+### Step-Into Async
+A debugger wants to perform a "step-into" action across an async boundary. Consider the following code:
+
+```javascript
+processHttpRequest(req, res) {
+    // currently debugger is paused on doSomethingAsync below
+    doSomethingAsync(function c() {
+        console.log('I want to break here');
+    });
+}    
+```
+
+A trivial approach is for the IDE to simply set a breakpoint inside the continuation.  However, that breakpoint may hit for a different http request than the one currently under inspection.  To address this, the debugger client, when responding to a "step into async" gesture, will execute the followign code
+
+```typescript
+const location = ...; // location of where to set the conditional breakpoint
+const currentContext = ContinuationInvocation.GetCurrent();
+const condition =  `ContinuationInvocation.GetCurrent().continuation.linkingContext.invocationID == ${currentContext.invocationID}`;
+debugger.setConditionalBreakpoint(location, condition);
+debugger.continue();
+```
+
+### Step-back Async
+A "step-back" debugger wants to step backwards across an async boundary.  Consider the following code:
+
+```javascript
+processHttpRequest(req, res) {
+    doSomethingAsync(function c() {
+        // currently debugger is paused on console.log below
+        console.log('');
+    });
+}    
+```
+
+A trivial approach is for the IDE to simply set a breakpoint outside of the scope of the current continuation.  However, that breakpoint may hit for a different http request than the one currently under inspection.  To address this, the debugger client, when responding to a "step back async" gesture, will execute the followign code
+
+```typescript
+const location = ...; // location of where to set the conditional breakpoint
+const currentContext = ContinuationInvocation.GetCurrent();
+const condition =  `ContinuationInvocation.GetCurrent().invocationID == ${currentContext.continuation.linkingContext.invocationID}`;
+debugger.setConditionalBreakpoint(location, condition);
+debugger.reverseContinue();
+```
