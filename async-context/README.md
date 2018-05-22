@@ -54,7 +54,6 @@ At a lower-level, at runtime we can view the example above as two distinct call 
 |    host function A()    |
 ---------------------------
 ```
-*Figure 1*
 
 and
 
@@ -71,7 +70,6 @@ and
 |    host function B()     |
 ---------------------------
 ```
-*Figure 2*
 
 Since we previously made a distinction between a regular JavaScript function and a "continuation", let's make the same distinction in our pictures of the callstacks:
 
@@ -206,7 +204,7 @@ In our example above, the `Continuation Invocation` associated with `continuatio
 
   - **Async Call Graph** - A directed acyclic graph that results with the nodes as `Continuations` and `Continuation Invocations`, and edges as `linkingContext` and `causalContext` references.
 
-### State of a Contiuation Invocation
+### Continuation Invocation States
 A `Continuation Invocation` can be in a number of states:
   - `pending` - A  `Continuation Invocation` instance has been created, but is not yet executing, nor is it ready to execute.
   - `ready` - A `Continuation Invocation` is ready to execute, but is not yet executing
