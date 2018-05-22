@@ -54,6 +54,7 @@ At a lower-level, at runtime we can view the example above as two distinct call 
 |    host function A()    |
 ---------------------------
 ```
+*Figure 1*
 
 and
 
@@ -70,6 +71,7 @@ and
 |    host function B()     |
 ---------------------------
 ```
+*Figure 2*
 
 Since we previously made a distinction between a regular JavaScript function and a "continuation", let's make the same distinction in our pictures of the callstacks:
 
@@ -107,7 +109,7 @@ and
 
 
 Lets more formally define the event when a `Continuation` is invoked:
-  - A  **Continuation Invocation** is a specific invocation of a `continuation`; more precisely, a **Continuation Invocation** is the *period of time* where a `continuation` frame is on the stack.  As soon as the continuation frame pops off the stack, then that `Continuation Invocation` is completed.
+  - A  **Continuation Invocation** is a specific invocation of a `continuation`; more precisely, a **Continuation Invocation** is the *period of time* where a `continuation` frame is on the stack.  As soon as the continuation frame pops off the stack, then that **Continuation Invocation** is completed.
   - Note the following:
     - A `continuation` instance can have more than one `Continuation Invocation` instance associated with it.  For example, given our initial code sample with the call to `setInterval`, there will be precisely two `Continuation Invocation` instances associated with the `continuation` f2. 
     - in the pictures above, we've introduced a "Root Continuation" as the bottom frame.  This  illustrates a basic assumption that all code is executing in the context of a `Continuation Invocation`.  
@@ -198,7 +200,6 @@ In our example above, the `Continuation Invocation` associated with `continuatio
     interface ContinuationInvocation {
         invocationID:  number;
         continuation: Continuation
-        propertyBag: {};
         causalContext: ContinuationInvocation;
     }
     ```
