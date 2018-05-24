@@ -194,7 +194,7 @@ In our example above, the `Continuation Invocation` associated with `continuatio
     }
     ```
 
-  -  **Continuation Invocation** - a specific invocation of a `Continuation`. A `Continuation Invocation` has the following shape in TypeScript:
+  - **Continuation Invocation** - a specific invocation of a `Continuation`. A `Continuation Invocation` has the following shape in TypeScript:
 
     ```TypeScript
     interface ContinuationInvocation {
