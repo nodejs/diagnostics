@@ -40,7 +40,7 @@ Let's give these three concepts some names and some initial definitions:
 
    - A **Continuation** is a JavaScript function that retains a link to the "async context" in which it is created.  Upon invocation, it will establish a new "async context", and will provide a "logical continuation" of the "async context" in which it was created.  In the example above, `f2` is a **Continuation**.
    - A **Continuation Point** - is a function that accepts a **Continuation** as a parameter.  This logically represents an async boundary; functions passed to a **Continuation Point** are invoked at some later point in time.  In our example above, `setInterval` is a **Continuation Point**. 
-  -  A **Continuation Invocation** is a specific invocation of a `continuation`; more precisely, a **Continuation Invocation** is the *period of time* where a `continuation` frame is on the stack.  As soon as the continuation frame pops off the stack, then that **Continuation Invocation** is completed. Note that a `continuation` instance can have more than one `Continuation Invocation` instances associated with it.  In our code sample above, there are precisely two `Continuation Invocation` instances associated with the `continuation` f2. 
+  -  A **Continuation Invocation** is a specific invocation of a `continuation`; more precisely, a **Continuation Invocation** is the *period of time* where a `continuation` frame is on the stack.  As soon as the continuation frame pops off the stack, then that **Continuation Invocation** is completed. Note that a `continuation` instance can have more than one **Continuation Invocation** instances associated with it.  In our code sample above, there are precisely two **Continuation Invocation** instances associated with the `continuation` f2. 
 
 ## A lower-level view
 
@@ -76,7 +76,7 @@ and
 ---------------------------
 ```
 
-Since we previously made a distinction between a regular JavaScript function and a "continuation", let's make the same distinction in our pictures of the callstacks:
+Since we previously made a distinction between a regular JavaScript function and a `continuation`, let's make the same distinction in our pictures of the callstacks:
 
 ```
 --------------------------- 
@@ -111,8 +111,8 @@ and
 ```
 
 Some notes about the pictures above:
-    - We've introduced a "Root Continuation" as the bottom frame.  This  illustrates a basic assumption that all code is executing in the context of a `Continuation Invocation`.
-    - Multiple `continuations` can be in the stack, which result in mulitple `Continuation Invocations`. For any given stack frame, the `context` is the first `Continuation Invocation` below the given frame on the stack.
+  - We've introduced a "Root Continuation" as the bottom frame.  This  illustrates a basic assumption that all code is executing in the context of a `Continuation Invocation`.
+  - Multiple `continuations` can be on the stack at the same time, which result in mulitple `Continuation Invocations`. For any given stack frame, the "context" is the first `Continuation Invocation` below the given frame on the stack.
 
 Here, we've updated our pictures of runtime callstacks, giving  labels to the `Continuation Invocation` instances:
 
@@ -199,12 +199,12 @@ In our example above, the `Continuation Invocation` associated with `continuatio
     ```TypeScript
     interface ContinuationInvocation {
         invocationID:  number;
-        continuation: Continuation
+        continuation: Continuation;
         readyContext: ContinuationInvocation;
     }
     ```
 
-  - **Async Call Graph** - A directed acyclic graph that results with the nodes as `Continuations` and `Continuation Invocations`, and edges as `linkingContext` and `readyContext` references.
+  - **Async Call Graph** - A directed acyclic graph comprised of `Continuations` and `Continuation Invocations` instances as nodes, and the `linkingContext` and `readyContext` references as edges.
 
 ### Continuation Invocation States
 A `Continuation Invocation` can be in a number of states:
