@@ -17,17 +17,18 @@ Work needed includes:
 ### Current Initiatives
 
 | Initiative           | Champion                                         | Stakeholders                            | Links                                            |
-|----------------------|--------------------------------------------------|-----------------------------------------|--------------------------------------------------|
-| Diagnostic Channel   | [@qard](https://github.com/qard)                 |                                         | https://github.com/nodejs/diagnostics/issues/180 |
-| Async Hooks          | [@ofrobots](https://github.com/ofrobots)         |                                         | https://github.com/nodejs/diagnostics/issues/124 |
-| Async Context        | [@mike-kaufman](https://github.com/mike-kaufman) | [@kjin](https://github.com/kjin)        | https://github.com/nodejs/diagnostics/issues/107 |
+|----------------------|--------------------------------------------------|----------------------------------------------|--------------------------------------------------|
+| Diagnostic Channel   | [@qard](https://github.com/qard)                 |                                              | https://github.com/nodejs/diagnostics/issues/180 |
+| Async Hooks          | [@ofrobots](https://github.com/ofrobots)         |                                              | https://github.com/nodejs/diagnostics/issues/124 |
+| Async Context        | [@mike-kaufman](https://github.com/mike-kaufman) | [@kjin](https://github.com/kjin)             | https://github.com/nodejs/diagnostics/issues/107 |
+| Node-report in core  | [@mhdawson](https://github.com/mhdawson)         | [@richardlau](https://github.com/richardlau) | coming soon |
+| Support tiers        | [@mhdawson](https://github.com/mhdawson)         |                                              | https://github.com/nodejs/diagnostics/issues/157 |
 
 #### Need volunteers for
 
 | Initiative            | Champion      | Links                                            |
 |-----------------------|---------------|--------------------------------------------------|
 | CPU Profiling         |               | https://github.com/nodejs/diagnostics/issues/148 |
-| Support tiers         |               | https://github.com/nodejs/diagnostics/issues/157 |
 | Trace Events          |               | https://github.com/nodejs/diagnostics/issues/84  |
 | Performance Profiles  |               | https://github.com/nodejs/diagnostics/issues/161 |
 | Time-travel debugging |               | https://github.com/nodejs/diagnostics/issues/164 |
