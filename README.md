@@ -1,4 +1,4 @@
-# Diagnostics Working Group  
+# Diagnostics Working Group
 The goal of this WG is to ensure Node provides a set of comprehensive, documented, extensible diagnostic protocols, formats, and APIs to enable tool vendors to provide reliable diagnostic tools for Node.
 
 Work is divided into several domains:
@@ -9,7 +9,7 @@ Work is divided into several domains:
 
 Background, reference documentation, samples, and discussion for each domain is contained within its folder.
 
-Work needed includes:  
+Work needed includes:
 - Collect, understand, and document existing diagnostic capabilities and entry-points throughout Node, V8, and other components.
 - Collect and document projects and products providing diagnostics for Node with brief description of their technical architecture and sponsoring organizations.
 - Identify opportunities and gaps, then propose and implement solutions.
@@ -23,12 +23,13 @@ Work needed includes:
 | Async Context        | [@mike-kaufman](https://github.com/mike-kaufman) | [@kjin](https://github.com/kjin)             | https://github.com/nodejs/diagnostics/issues/107 |
 | Node-report in core  | [@mhdawson](https://github.com/mhdawson)         | [@richardlau](https://github.com/richardlau) | coming soon |
 | Support tiers        | [@mhdawson](https://github.com/mhdawson)         |                                              | https://github.com/nodejs/diagnostics/issues/157 |
+| CPU Profiling        | [@mmarchini](https://github.com/mmarchini)       |                                              | https://github.com/nodejs/diagnostics/issues/148 |
+| Post-mortem WG merge | [@mmarchini](https://github.com/mmarchini)       |                                              | https://github.com/nodejs/post-mortem/issues/48 |
 
 #### Need volunteers for
 
 | Initiative            | Champion      | Links                                            |
 |-----------------------|---------------|--------------------------------------------------|
-| CPU Profiling         |               | https://github.com/nodejs/diagnostics/issues/148 |
 | Trace Events          |               | https://github.com/nodejs/diagnostics/issues/84  |
 | Performance Profiles  |               | https://github.com/nodejs/diagnostics/issues/161 |
 | Time-travel debugging |               | https://github.com/nodejs/diagnostics/issues/164 |
@@ -38,7 +39,7 @@ Work needed includes:
 - Monthly Meetings
 - Biannual F2F
 
-### Members 
+### Members
 
 <!-- ncu-team-sync.team(nodejs/diagnostics) -->
 
