@@ -12,10 +12,10 @@ We strive to adhere to some basic principles in this document.  We believe that 
 3.  Constructs should enhance JavaScript programmers' understanding of async code flow & async boundaries.
 4.  Model should allow for simplified reasoning about async code execution.
 5.  Resulting Data Structures and APIs and should support solving common "async understanding" use cases (e.g., long stack traces, continuation local storage, visualizations, async error propogation, user-space queueing...).
-6.  Model should allow for implementations at different layers of the stack (VM, host or "monkey-patched"), and implementations in appropriate languages (c++ or JavaScript).
+6.  It should be straightforward to implement this model at any API layer (i.e., VM, host or "monkey-patched").
 
 ## A Simple Example
-We'll start with a simple example that is not controversial. Most JS programmers should have an intuitive understanding of where the async boundaries are in this code.  We'll build off of this example going forward.  Implicit in this example is an undefined concept of "async context".  We'll build stronger definitions later on, but for now, we'll use "async context" to refer to JS programmers' colloquial understanding of asynchonrous function calls.
+We'll start with a simple example that is not controversial: 
 
 ```javascript
 function f1() {
@@ -29,7 +29,11 @@ function f1() {
         }
     }, 1000);
 }
+
+f1();
 ```
+
+Most JS programmers should have an intuitive understanding of what happens when the code above is executed.  We'll build off of this example going forward.  Implicit in this example is an undefined concept of "async context".  We'll build stronger definitions later on, but for now, we'll use "async context" to refer to JS programmers' colloquial understanding of asynchonrous function calls.
 
 There are three interesting constructs in the above example:
   - First, the function `f2` is a function created in one "async context" and passed through an API.  When `f2` is invoked later, it is a "logical continuation" of the "context" in which it was created.
@@ -112,7 +116,7 @@ and
 
 Some notes about the pictures above:
   - We've introduced a "Root Continuation" as the bottom frame.  This  illustrates a basic assumption that all code is executing in the context of a `Continuation Invocation`.
-  - Multiple `continuations` can be on the stack at the same time, which result in mulitple `Continuation Invocations`. For any given stack frame, the "context" is the first `Continuation Invocation` below the given frame on the stack.
+  - Multiple `continuations` can be on the stack at the same time, which result in mulitple `Continuation Invocations`.
 
 Here, we've updated our pictures of runtime callstacks, giving  labels to the `Continuation Invocation` instances:
 
@@ -148,11 +152,25 @@ and
 ===================================            -----------
 ```
 
+## Continuation Invocation States
+A `Continuation Invocation` can be in a number of states:
+  - `pending` - A  `Continuation Invocation` instance has been created, but is not yet executing, nor is it ready to execute.
+  - `cancelled` - A `Continuation Invocation` was abandoned.
+  - `ready` - A `Continuation Invocation` is ready to execute, but is not yet executing
+  - `executing` - `Continuation Invocation` is currently executing on the stack
+  - `paused` - A `Continuation Invocation` has started execution, but is not currently on the stack.  E.g., for generator functions. // todo - is this necessary for async/await & generators.  what is tc39 terminology?
+  - `completed` - A `Continuation Invocation` instance is completed.  However, the instance, during execution, may have called other `Continuation Points` and those `Continuation Invocations` are still pending execution.
+  - `collectable` - A `Continuation Invocation` instance is completed and all child-spawned continuations are in the collectable state.
+
+## Context and Current Context
+For any given stack frame, we define it's  **Context** as the `Continuation Invocation` defined by the first `Continuation` below the given frame on the stack.  For example, in the previous diagram, the stack frame of `function x()` has a `Current Context` of `ci3`,
+and the stack frame of  `... host code...` has a "`Current Context` of `ci2`.  We define the **Current Context** as the `Context` of the top frame on the stack. 
+
 ## Link Context
-We define the `Link Context` `link-c` of a `Continuation` `c` as a pointer from `c` to the `Continuation Invocation` instance where `c` was constructed.  In the example from above, the `continuation` `f2` has a `link context` pointing to `Continuation Invocation` `ci1`.
+We define the **Link Context** of a `Continuation` to be the `Current Context` when a `Continuation` is constructed.   In the example from above, the `continuation` `f2` has a `link context` pointing to `Continuation Invocation` `ci1`.
 
 ## Ready Context
-Consider the following example:
+We define the **Ready Context** to be the `Current Context` when a `Continuation Invocation` changes state from `pending` to `ready`.  This is useful for promises, where we want to understand the series of `Continuation Invocation` instances on a promise chain.  When a promise is resolved or rejected, the promise implementation must modify the state of `Continuation Invocations` associated with subsequent promises on the chain. Consider the following example:
 
 ```javascript
 const p = new Promise((resolve, reject) => {
@@ -174,9 +192,7 @@ In this code example, we have:
     the initial code is executing in. 
   - four `Continuation Invocations`.
 
-We define the `Ready Context` (//TODO, close on naming - `Causal Context`, `Resolve Context`???) for a promise as a reference from a `Continuation Invocation` associated with a Promise.then call, to the `Continuation Invocation` in which the preceding promise in the promise chain was resolved.
-
-For non-promise-based APIs, the `Ready Context` is the same as the `Link Context` (//TODO or should it be null/undefined?)
+For non-promise-based APIs, the `Ready Context` is the same as the `Link Context`.
 
 In our example above, the `Continuation Invocation` associated with `continuation f2()` has as its `Ready Context`, a reference to the `Continuation Invocation` associated with `continuation f3()`.  
 
@@ -189,7 +205,14 @@ In our example above, the `Continuation Invocation` associated with `continuatio
   - **Continuation** -  a function that, when invoked, creates a new `Continuation Invocation` instance, and maintains references to other related `Continuation Invocation` instances. Using TypeScript for descriptive purposes, a `Continuation` has the following shape:
 
     ```TypeScript
-    interface Continuation {
+    /**
+     * maker interface for a generic function type
+     */
+     interface IFunction {
+        (...args: any[]): any
+    }
+
+    interface Continuation extends IFunction{
         linkingContext: ContinuationInvocation;
     }
     ```
@@ -204,16 +227,7 @@ In our example above, the `Continuation Invocation` associated with `continuatio
     }
     ```
 
-  - **Async Call Graph** - A directed acyclic graph comprised of `Continuations` and `Continuation Invocations` instances as nodes, and the `linkingContext` and `readyContext` references as edges.
-
-### Continuation Invocation States
-A `Continuation Invocation` can be in a number of states:
-  - `pending` - A  `Continuation Invocation` instance has been created, but is not yet executing, nor is it ready to execute.
-  - `ready` - A `Continuation Invocation` is ready to execute, but is not yet executing
-  - `executing` - `Continuation Invocation` is currently executing on the stack
-  - `paused` - A `Continuation Invocation` has started execution, but is not currently on the stack.  E.g., for generator functions. // todo - is this necessary for async/await & generators.  what is tc39 terminology?
-  - `completed` - A `Continuation Invocation` instance is completed.  However, the instance, during execution, may have called other `Continuation Points` and those `Continuation Invocations` are still pending execution.
-  - `collectable` - A `Continuation Invocation` instance is completed and all child-spawned continuations are in the collectable state.
+  - **Async Call Graph** - A directed acyclic graph comprised of `Continuations` and `Continuation Invocations` instances as nodes, and the `linkingContext` and `readyContext` references as edges. // TODO draw some pictures of the DAG
 
 ## Where are the Continuation Points?
 The `Continuation Points` are defined by convention by the host environment.  The host needs logic to determine if a given argument is a function or a continuation, and if not yet a continuation, needs to "continuify" the parameter.  The host is also responsible for "pinning" any `Continuation` instances to prevent premature garbage collection.
@@ -258,6 +272,7 @@ The events above are JSON events and their schema is illustrated in the followin
 // TODO: add better examples here. 
 
 ## Applications
+Most applications can be thought of traversal of a specific path of edges through the `Async Call Graph`.  We give some trivial examples below.  
 
 ### Continuation Local Storage
 ```typescript
