@@ -52,7 +52,7 @@ At runtime we can view the example above as two distinct call stacks at specific
 
 ```
 ---------------------------
-|   setTimeout()          |
+|   setInterval()         |
 ---------------------------
 |   function f1()         |
 ---------------------------
@@ -84,7 +84,7 @@ Since we previously made a distinction between a regular JavaScript function and
 
 ```
 --------------------------- 
-|   setTimeout()          | 
+|   setInterval()         | 
 --------------------------- 
 |   function f1()         | 
 ---------------------------      
@@ -122,7 +122,7 @@ Here, we've updated our pictures of runtime callstacks, giving  labels to the `C
 
 ```
 ---------------------------                    -----------                            
-|   setTimeout()          |                              |
+|   setInterval()         |                              |
 ---------------------------                              |
 |   function f1()         |                              |
 ---------------------------                              \/
