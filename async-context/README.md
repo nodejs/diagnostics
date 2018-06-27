@@ -2,7 +2,9 @@
 # JavaScript Asynchronous Context
 
 ## Overview
-This document defines a model for "JavaScript Asynchronous Context".  This model includes terminology & definitions, programmatic "types" that result from these definitions, and relations between these types.  These utlimately form an API that expose the model, and allow us to reason about and solve common JavaScript "async code execution" problems
+This document defines a model for "JavaScript Asynchronous Context".  This model includes terminology & definitions, programmatic "types" that result from these definitions, and relations between these types.  These utlimately form an API that expose the model, and allow us to reason about and solve common JavaScript "async code execution" problems.
+
+We frame the problem in two parts.  First is a directed acyclic graph we call the "Async Call Graph" that accurately models the relationships of asynchronous code execution.  With a well-defined, common problems can be defined in terms of traversals over this graph.
 
 ## Principles
 We strive to adhere to some basic principles in this document.  We believe that adhereing to these principles will ensure simplicity and help guide the model.
@@ -18,6 +20,9 @@ We strive to adhere to some basic principles in this document.  We believe that 
 We'll start with a simple example that is not controversial: 
 
 ```javascript
+function x(s) { ... }
+function myLoggingAPI(s) { x(s); }
+
 function f1() {
     let i = 0;
     let interval = setInterval(function f2() {
@@ -167,7 +172,7 @@ For any given stack frame, we define it's  **Context** as the `Continuation Invo
 and the stack frame of  `... host code...` has a "`Current Context` of `ci2`.  We define the **Current Context** as the `Context` of the top frame on the stack. 
 
 ## Link Context
-We define the **Link Context** of a `Continuation` to be the `Current Context` when a `Continuation` is constructed.   In the example from above, the `continuation` `f2` has a `link context` pointing to `Continuation Invocation` `ci1`.
+We define the **Link Context** of a `Continuation` to be the `Current Context` when a `Continuation` is constructed.   In the example from above, the `continuation` `f2` has a `link context` pointing to `Continuation Invocation` `ci1`.  Generally, this is the `Current Context` when a `Continuation` is passed into a `Continuation Point`.
 
 ## Ready Context
 We define the **Ready Context** to be the `Current Context` when a `Continuation Invocation` changes state from `pending` to `ready`.  This is useful for promises, where we want to understand the series of `Continuation Invocation` instances on a promise chain.  When a promise is resolved or rejected, the promise implementation must modify the state of `Continuation Invocations` associated with subsequent promises on the chain. Consider the following example:
@@ -271,18 +276,226 @@ The events above are JSON events and their schema is illustrated in the followin
 // TODO: can this be simplified to support  state-change events on the continuation invocation 
 // TODO: add better examples here. 
 
+## Advanced Examples
+
+### Javascript Generators
+Javascript Generators are functions that support "yield" and "resume" operations. When a Generator "yields", its next instruction will be saved and control will return to the calling function.  When a Generator "resumes", the generator will start executiong at the previously saved instruction pointer. 
+
+#### A simple generator
+
+Consider the following example:
+
+```javascript
+function* idMaker() {
+    var index = 0;
+    while (true) {
+        console.log(new Error().stack);
+        yield index++;
+    }
+}
+
+
+function f() {
+    var gen = idMaker();
+    
+    function log1() {
+        console.log(gen.next().value); // point 0
+    }
+    
+    function log2() {
+        console.log(gen.next().value); // point 1
+    }    
+
+    Promise.resolve(true)
+        .then(function then1() {
+            log1();
+        }).then(function then2() {
+            log2();
+        });
+}
+
+f();
+```
+
+This example will result in the following stack frame when f() is invoked:
+
+```
+---------------------------                   -----------
+| Promise.then()          |                              |                       
+---------------------------                              \/
+| function f()            |                  Continuation Invocation ci1
+---------------------------                              |
+|    ...host code...      |                              |
+---------------------------                              |
+|    ...host code...      |                              |
+===================================                      |
+|   Host Continuation A()         |                      |
+===================================            -----------
+```
+
+And the example will result in the following stack frames at points `// point 0` and `//point 1` respectively:
+
+```
+---------------------------                   -----------
+| function idMaker()      |                              |                       
+---------------------------                              |
+| function idMaker.next() |                              |                       
+---------------------------                              \/
+| function log1()         |                  Continuation Invocation ci3                       
+===================================                      /\
+|    Continuation then1()         |                      |
+===================================            -----------
+|    ...host code...      |                              |
+---------------------------                              \/
+|    ...host code...      |                   Continuation Invocation ci2
+===================================                      /\
+|   Host Continuation B()         |                      |
+===================================            -----------
+```
+
+and
+
+```
+---------------------------                   -----------
+| function idMaker()      |                              |                       
+---------------------------                              |
+| function idMaker.next() |                              |                       
+---------------------------                              \/
+| function log2()         |                  Continuation Invocation ci5
+===================================                      /\
+|    Continuation then2()         |                      |
+===================================            -----------
+|    ...host code...      |                              |
+---------------------------                              \/
+|    ...host code...      |                   Continuation Invocation ci4
+===================================                      /\
+|   Host Continuation B()         |                      |
+===================================            -----------
+```
+
+Note the following:
+  - `then1` and `then2` are `Continuations`.
+  - `then1` and `then2` have the same `linking context` of `ci1`.
+  -  when invoked, `then1` and `then2` are distinct `continuation invocations`, yet they remain visitiable via their `linking context` edges in the DAG.
+  - `continuation invocation` `ci5` has its `ready context` value of `ci4`. 
+
+#### Using Continuations for generator functions
+It should be theoretically possible to define a generator function as a `Continuation`. In such a situation, each resume of the of the generator function will resume the same context. This follows from previous definitions.
+
+### Javascript Async Functions
+Similiar to Generators, async functions can "yield" and "resume" their execution, however async functions involve implicit Promise construction, both when an async function is invoked, and when the await keyword is used inside an async function.
+
+To illustrate behavior when async/await syntax is used, we'll take a simple example and then deconstruct it to it's promise-based code.  From the promise-based code, it should be more clear as to what the `Current Context` values are at various points in time.
+
+This simple example with async/await:
+
+```javascript
+async function g() {
+    return 'g() was called';  // point 1
+}
+
+async function f() {
+    console.log('f() before g()');  // point 0
+    let r = await g();
+    console.log(`f() after g(), result is "${r}"`);  // point 2
+}
+
+f();
+```
+
+Turns into this de-sugar'd example.  Note that we tried to honor explicit spec language, notably in sections [25.7.5.1 (AsyncFunctionStart)](https://tc39.github.io/ecma262/#sec-async-functions-abstract-operations-async-function-start) and  [6.2.3.1 (Await)](https://tc39.github.io/ecma262/#await).
+
+```javascript
+function g() {
+    return Promise.resolve('g() was called');  // point 1
+}
+
+function f() {
+    return new Promise((resolve1, reject1) => {
+        
+        console.log('f() before g()');  // point 0
+
+        // call the async function
+        var result = g();
+
+        // create a new promise, resolving w/ return value from the async function
+        var p1 = new Promise((resolve2, reject2) => {
+            resolve2(result);
+        });
+
+        // call then on the new promise, where onResolved will resume execution after
+        p1.then(
+            function onResolvedP1(r) {
+                // steps fulfiled
+                console.log(`f() after g(), result is "${r}"`);  // point 2
+            },
+            function onRejectedP1() {
+                // steps rejected
+            });
+
+        resolve1(p1);
+    });
+}
+
+f();
+```
+
+Let's look at the callstacks that occur, first for the points labeled `// point 0` and `// point 1,` and then for the point labeled `// point 2`:
+
+```
+-----------------------------                   -----------
+|  new Promise() // point-0 |                              |                       
+-----------------------------                              |
+|  function g()             |                              |                       
+-----------------------------                              |
+|  new Promise() // point-0 |                              |                       
+-----------------------------                              \/
+| function f()              |                  Continuation Invocation ci1
+-----------------------------                              |
+|    ...host code...        |                              |
+-----------------------------                              |
+|    ...host code...        |                              |
+===================================                        |
+|   Host Continuation A()         |                        |
+===================================            -------------
+```
+
+```
+===================================            -------------
+|                                 |                         |
+|                                 |                         \/
+| Continuation onResolvedP1()     |           Continuation Invocation ci3                       
+|                                 |                         /\
+|                                 |                         |
+===================================            --------------
+|    ...host code...      |                                 |
+---------------------------                                \/
+|    ...host code...      |                   Continuation Invocation ci2
+===================================                        /\
+|   Host Continuation B()         |                        |
+===================================            -------------
+```
+
+Note the following:
+  - `onResolvedP1` and `onRejectedP1` are `Continuations`.
+  - `p1.then` is called in continuation c1, thus `onResolvedP1` and `onRejectedP1` have a linking context value of `ci1`.
+  -  when invoked, `then1` and `then2` are distinct `continuation invocations`, yet they remain visitable via their `linking context` edges in the DAG.
+
+### Async Generators
+TBD
+
 ## Applications
 Most applications can be thought of traversal of a specific path of edges through the `Async Call Graph`.  We give some trivial examples below.  
 
 ### Continuation Local Storage
 ```typescript
 /**
- *  A simple Continuation Local Storage construction that utilizes the
- *  Async Call Graph.  For setting values, we set a property at the current
- *  ContinuationInvocation.  For getting values, we follow the "linking context"
- *  path from the current "Continuation Invocation" to the 
+*  A simple Continuation Local Storage construction that utilizes the
+*  Async Call Graph.  For setting values, we set a property at the current
+*  ContinuationInvocation.  For getting values, we follow the "linking context"
+*  path from the current "Continuation Invocation" to the 
  *  root of the graph.  At each node, we check for the presence of the key we're looking for.
- */
+*/
 class ContinuationLocalStorage {
     static set(key: string, value: any) {
         let curr: ContinuationInvocation = ContinuationInvocation.GetCurrent();
@@ -311,8 +524,8 @@ class ContinuationLocalStorage {
 ### Async Error Propogation
 ```typescript
 /**
- *  simple error propagation across async boundaries, following the "linking context"
- */
+*  simple error propagation across async boundaries, following the "linking context"
+*/
 class AsyncErrorPropogationStrategy {
     static AsyncThrow(err: Error) {
         let curr: ContinuationInvocation = ContinuationInvocation.GetCurrent();
@@ -373,3 +586,11 @@ const condition =  `ContinuationInvocation.GetCurrent().invocationID == ${curren
 debugger.setConditionalBreakpoint(location, condition);
 debugger.reverseContinue();
 ```
+
+## Integration into the ECMAScript Specification
+
+We believe this model fits nicely into the existing ecma-script specificaiton with minimal modifications.  Waving hands, this amounts to:
+
+1.  Expand the definition of the `Execution Context` to account for a `Continuation Context` subclass, which has internal slots indicating the current ID, `ready-context` ID, and the `Continuation` which invoked it.   This directly maps to our `Continuation Invocation` concept.
+1.  Expand the spec to include a definitions and abstract operations for a `Continuation` as we've described here.  A `Continuation`, when invoked, will establish a new `Continuation Context`.
+1.  Expand the spec's defiinitions of `PromiseReactionJob` to account for setting the approiate `ready-context` on teh resulting `Continuation Context`.
