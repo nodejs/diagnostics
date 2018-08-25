@@ -68,7 +68,6 @@ Work needed includes:
 - [@piscisaureus](https://github.com/piscisaureus) - Bert Belder
 - [@pmuellr](https://github.com/pmuellr) - Patrick Mueller
 - [@Qard](https://github.com/Qard) - Stephen Belanger
-- [@rmg](https://github.com/rmg) - Ryan Graham
 - [@sam-github](https://github.com/sam-github) - Sam Roberts
 - [@thekemkid](https://github.com/thekemkid) - Glen Keane
 - [@thlorenz](https://github.com/thlorenz) - Thorsten Lorenz
