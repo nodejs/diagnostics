@@ -41,8 +41,6 @@ Work needed includes:
 
 ### Members
 
-<!-- ncu-team-sync.team(nodejs/diagnostics) -->
-
 Current Members#
 
 <!-- ncu-team-sync.team(nodejs/diagnostics) -->
