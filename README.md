@@ -46,6 +46,7 @@ Current Members#
 <!-- ncu-team-sync.team(nodejs/diagnostics) -->
 
 - [@AndreasMadsen](https://github.com/AndreasMadsen) - Andreas Madsen
+- [@BridgeAR](https://github.com/BridgeAR) - Ruben Bridgewater
 - [@cjihrig](https://github.com/cjihrig) - Colin Ihrig
 - [@danielkhan](https://github.com/danielkhan) - Daniel Khan
 - [@Flarna](https://github.com/Flarna) - Gerhard Stöbich
