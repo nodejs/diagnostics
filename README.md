@@ -41,8 +41,6 @@ Work needed includes:
 
 ### Members
 
-Current Members#
-
 <!-- ncu-team-sync.team(nodejs/diagnostics) -->
 
 - [@AndreasMadsen](https://github.com/AndreasMadsen) - Andreas Madsen
