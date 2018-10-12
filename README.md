@@ -50,6 +50,8 @@ Twice a year the diagnostics working group meets for a Face to Face gathering wh
 concerns are hashed out in greater detail. An issue will be created for the event where
 those who are interested may find details about how to participate.
 
+See the [foundation calendar](https://nodejs.org/calendar) for meeting times.
+
 ### Members
 
 <!-- ncu-team-sync.team(nodejs/diagnostics) -->
