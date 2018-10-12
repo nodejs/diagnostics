@@ -39,6 +39,8 @@ Work needed includes:
 - Monthly Meetings
 - Biannual F2F
 
+See the [foundation calendar]{https://calendar.google.com/calendar/embed?src=nodejs.org_nr77ama8p7d7f9ajrpnu506c98%40group.calendar.google.com} for meeting times.
+
 ### Members
 
 <!-- ncu-team-sync.team(nodejs/diagnostics) -->
