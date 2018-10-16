@@ -25,12 +25,12 @@ Work needed includes:
 | Support tiers        | [@mhdawson](https://github.com/mhdawson)         |                                              | https://github.com/nodejs/diagnostics/issues/157 |
 | CPU Profiling        | [@mmarchini](https://github.com/mmarchini)       |                                              | https://github.com/nodejs/diagnostics/issues/148 |
 | Post-mortem WG merge | [@mmarchini](https://github.com/mmarchini)       |                                              | https://github.com/nodejs/post-mortem/issues/48 |
+| Trace Events          | [@jasnell](https://github.com/jasnell)          | [@ofrobots](https://github.com/ofrobots)     | https://github.com/nodejs/diagnostics/issues/84 |
 
 #### Need volunteers for
 
 | Initiative            | Champion      | Links                                            |
 |-----------------------|---------------|--------------------------------------------------|
-| Trace Events          |               | https://github.com/nodejs/diagnostics/issues/84  |
 | Performance Profiles  |               | https://github.com/nodejs/diagnostics/issues/161 |
 | Time-travel debugging |               | https://github.com/nodejs/diagnostics/issues/164 |
 | Platform neutrality   |               |                                                  |
