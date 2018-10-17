@@ -36,8 +36,19 @@ Work needed includes:
 | Platform neutrality   |               |                                                  |
 
 ### Logistics
-- Monthly Meetings
-- Biannual F2F
+
+#### Semi-monthly Meetings
+
+Meetings of the working group typically occur every other Wednesday. A few days before each
+meeting, an [issue](https://github.com/nodejs/diagnostics/issues) will be created with the
+date and time of the meeting. The issue will provide schedule logistics as well as an agenda,
+links to meeting minutes, and information about how to join as a participant or a viewer.
+
+#### Biannual F2F
+
+Twice a year the diagnostics working group meets for a Face to Face gathering where current
+concerns are hashed out in greater detail. An issue will be created for the event where
+those who are interested may find details about how to participate.
 
 ### Members
 
