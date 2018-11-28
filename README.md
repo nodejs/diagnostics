@@ -21,7 +21,7 @@ Work needed includes:
 | Diagnostic Channel   | [@qard](https://github.com/qard)                 |                                              | https://github.com/nodejs/diagnostics/issues/180 |
 | Async Hooks          | [@ofrobots](https://github.com/ofrobots)         |                                              | https://github.com/nodejs/diagnostics/issues/124 |
 | Async Context        | [@mike-kaufman](https://github.com/mike-kaufman) | [@kjin](https://github.com/kjin)             | https://github.com/nodejs/diagnostics/issues/107 |
-| Node-report in core  | [@mhdawson](https://github.com/mhdawson)         | [@richardlau](https://github.com/richardlau) | coming soon |
+| Node-report in core  | [@mhdawson](https://github.com/mhdawson)         | [@gireeshpunathil](https://github.com/gireeshpunathil) | https://github.com/nodejs/node/pull/22712  |
 | Support tiers        | [@mhdawson](https://github.com/mhdawson)         |                                              | https://github.com/nodejs/diagnostics/issues/157 |
 | CPU Profiling        | [@mmarchini](https://github.com/mmarchini)       |                                              | https://github.com/nodejs/diagnostics/issues/148 |
 | Post-mortem WG merge | [@mmarchini](https://github.com/mmarchini)       |                                              | https://github.com/nodejs/post-mortem/issues/48 |
