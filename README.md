@@ -59,6 +59,7 @@ those who are interested may find details about how to participate.
 - [@cjihrig](https://github.com/cjihrig) - Colin Ihrig
 - [@danielkhan](https://github.com/danielkhan) - Daniel Khan
 - [@Flarna](https://github.com/Flarna) - Gerhard Stöbich
+- [@gireeshpunathil](https://github.com/gireeshpunathil) - Gireesh Punathil
 - [@hashseed](https://github.com/hashseed) - Yang Guo
 - [@hekike](https://github.com/hekike) - Peter Marton
 - [@Hollerberg](https://github.com/Hollerberg) - Gernot Reisinger
