@@ -56,7 +56,6 @@ those who are interested may find details about how to participate.
 - [@AndreasMadsen](https://github.com/AndreasMadsen) - Andreas Madsen
 - [@BridgeAR](https://github.com/BridgeAR) - Ruben Bridgewater
 - [@cjihrig](https://github.com/cjihrig) - Colin Ihrig
-- [@danielkhan](https://github.com/danielkhan) - Daniel Khan
 - [@Flarna](https://github.com/Flarna) - Gerhard Stöbich
 - [@gireeshpunathil](https://github.com/gireeshpunathil) - Gireesh Punathil
 - [@hashseed](https://github.com/hashseed) - Yang Guo
@@ -93,3 +92,4 @@ those who are interested may find details about how to participate.
 - [@thekemkid](https://github.com/thekemkid) - Glen Keane
 - [@thlorenz](https://github.com/thlorenz) - Thorsten Lorenz
 - [@trevnorris](https://github.com/trevnorris) - Trevor Norris
+- [@danielkhan](https://github.com/danielkhan) - Daniel Khan
