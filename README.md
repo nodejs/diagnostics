@@ -16,15 +16,16 @@ Work needed includes:
 
 ### Current Initiatives
 
-| Initiative           | Champion                                         | Stakeholders                            | Links                                            |
-|----------------------|--------------------------------------------------|----------------------------------------------|--------------------------------------------------|
-| Diagnostic Channel   | [@qard](https://github.com/qard)                 |                                              | https://github.com/nodejs/diagnostics/issues/180 |
-| Async Hooks          | [@ofrobots](https://github.com/ofrobots)         |                                              | https://github.com/nodejs/diagnostics/issues/124 |
-| Async Context        | [@mike-kaufman](https://github.com/mike-kaufman) | [@kjin](https://github.com/kjin)             | https://github.com/nodejs/diagnostics/issues/107 |
-| Support tiers        | [@mhdawson](https://github.com/mhdawson)         |                                              | https://github.com/nodejs/diagnostics/issues/157 |
-| CPU Profiling        | [@mmarchini](https://github.com/mmarchini)       |                                              | https://github.com/nodejs/diagnostics/issues/148 |
-| Post-mortem WG merge | [@mmarchini](https://github.com/mmarchini)       |                                              | https://github.com/nodejs/post-mortem/issues/48 |
-| Trace Events          | [@jasnell](https://github.com/jasnell)          | [@ofrobots](https://github.com/ofrobots)     | https://github.com/nodejs/diagnostics/issues/84 |
+| Initiative           | Champion                                         | Stakeholders                             | Links
+|----------------------|--------------------------------------------------|------------------------------------------|-------------------------------------------------
+| Diagnostic Channel   | [@qard](https://github.com/qard)                 |                                          | https://github.com/nodejs/diagnostics/issues/180
+| Async Hooks          | [@ofrobots](https://github.com/ofrobots)         |                                          | https://github.com/nodejs/diagnostics/issues/124
+| Async Context        | [@mike-kaufman](https://github.com/mike-kaufman) | [@kjin](https://github.com/kjin)         | https://github.com/nodejs/diagnostics/issues/107
+| Support tiers        | [@mhdawson](https://github.com/mhdawson)         |                                          | https://github.com/nodejs/diagnostics/issues/157
+| CPU Profiling        | [@mmarchini](https://github.com/mmarchini)       |                                          | https://github.com/nodejs/diagnostics/issues/148
+| Post-mortem WG merge | [@mmarchini](https://github.com/mmarchini)       |                                          | https://github.com/nodejs/post-mortem/issues/48
+| Trace Events         | [@jasnell](https://github.com/jasnell)           | [@ofrobots](https://github.com/ofrobots) | https://github.com/nodejs/diagnostics/issues/84
+| CLS                  | [@watson](https://github.com/watson)             |                                          | https://github.com/nodejs/node/pull/26540
 
 #### Need volunteers for
 
