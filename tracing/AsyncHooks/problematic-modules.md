@@ -17,3 +17,4 @@ Module | Embedder API | Note
 [bluebird](https://github.com/petkaantonov/bluebird) | [PR#1472](https://github.com/petkaantonov/bluebird/pull/1472) |
 [generic-pool](https://github.com/coopernurse/node-pool) | No | Used by a lot of database modules like for instance "pg"
 [mongoose](https://github.com/Automattic/mongoose/) | [#5929](https://github.com/Automattic/mongoose/issues/5929) | Most popular MongoDB ORM/ODM that implements its own user-land queueing.
+[graphql-subscriptions](https://github.com/apollographql/graphql-subscriptions/blob/26ed503566ecfab086e7530f0daf12b60ee3049c/src/pubsub-async-iterator.ts) | No | De-facto standard for working with GraphQL subscriptions. Custom queueing via an async iterator written in TypeScript and compiled down to ES5.
