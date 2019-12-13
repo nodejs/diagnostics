@@ -21,7 +21,7 @@ Check [writeHeapSnapshot docs](https://nodejs.org/dist/latest-v12.x/docs/api/v8.
 You need to have a way to invoke it without stopping the process, so calling it in a http handler or as a reaction to a signal from the operating system is advised.  
 Be careful not to expose the http endpoint triggering a snapshot. It should not be possible for anybody else to oaccess it.
 
-For versions of Node.js before v?TODO? you can use the  [heapdump package](https://www.npmjs.com/package/heapdump)
+For versions of Node.js before v11.13.0 you can use the  [heapdump package](https://www.npmjs.com/package/heapdump)
 
 ### How to find a memory leak with Heap Snapshots
 
@@ -34,7 +34,7 @@ To find a memory leak one compares two snapshots. It's important to make sure th
 1. Take another heap snapshot. The difference between the two should mostly contain what was leaking.
 1. Open Chromium/Chrome dev tools and go to *Memory* tab
 1. Load the older snapshot file first, newer one second ![Screenshot: Load button in tools]
-(TODO) <!--not sure if we want to maintain the screenshots-->
+(TODO) 
 1. Select the newer snapshot and switch mode in a dropdown at the top from *Summary* to *Comparison*.
 1. Look for large positive deltas and explore the references that caused them in the bottom panel.
 
