@@ -3,7 +3,7 @@
 ## Heap Profiler
 
 Heap Profiler is similar to the Sampling Heap Profiler, except it will track every allocation. It has
-higher overhead than the Sampling Heap Profiler to it’s not recommended to use in production.
+higher overhead than the Sampling Heap Profiler so it’s not recommended to use in production.
 
 ### How To
 
