@@ -19,7 +19,7 @@ require('v8').writeHeapSnapshot()
 Check [writeHeapSnapshot docs](https://nodejs.org/dist/latest-v12.x/docs/api/v8.html#v8_v8_writeheapsnapshot_filename) for file name options
 
 You need to have a way to invoke it without stopping the process, so calling it in a http handler or as a reaction to a signal from the operating system is advised.  
-Be careful not to expose the http endpoint triggering a snapshot. It should not be possible for anybody else to oaccess it.
+Be careful not to expose the http endpoint triggering a snapshot. It should not be possible for anybody else to access it.
 
 For versions of Node.js before v11.13.0 you can use the  [heapdump package](https://www.npmjs.com/package/heapdump)
 
