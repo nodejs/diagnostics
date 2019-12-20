@@ -10,7 +10,7 @@ can also compare multiple snapshots to see differences over time.
 
 The simplest way to get a Heap Snapshot is to connect a debugger to your process running locally and go to Profiling, choose to take a memory snapshot.
 
-If you need a snapshot form a working process, like an application running on a server, you should implement getting it using:
+If you need a snapshot from a working process, like an application running on a server, you should implement getting it using:
 
 ```js
 require('v8').writeHeapSnapshot()
