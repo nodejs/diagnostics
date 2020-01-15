@@ -32,7 +32,7 @@ $ # process exited
 There are three reasons for a process to exit silently: 
 
   1. The process was finished by using `process.exit()`
-  2. The process received a  termination signal
+  2. The process received a termination signal
   3. The process reached the end of the JavaScript execution and there are no async handlers attached
 
 To find out if the process exited because of a `process.exit()` call, follow [Using Exit Stack Traces](step1/using_exit_stack_traces.md). If that doesn't work, check if a process is exiting due to a termination signal by following `PLACEHOLDER FOR GUIDE` or if it's exiting because it doesn't have anything else to execute by following `PLACEHOLDER FOR GUIDE`.
