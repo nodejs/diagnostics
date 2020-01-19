@@ -36,8 +36,10 @@ the invocation to understand the reasons and prevent it from abnormal exits.
 
 If the process doesn't output a stack trace on exit, we can come to a
 conclusion that the process exited for other reasons, and we
-have to deploy following steps of the Abnormal Termination guides.
+can deploy strategy according to the [abnormal termination guides on common symptoms].
 
 ## Useful Links
 
 - https://nodejs.org/docs/latest/api/cli.html#cli_trace_exit
+
+[abnormal termination guides on common symptoms]: ../README.md#Common_Symptoms
