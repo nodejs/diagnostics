@@ -19,7 +19,7 @@ Work needed includes:
 | Initiative           | Champion                                         | Stakeholders                             | Links
 |----------------------|--------------------------------------------------|------------------------------------------|-------------------------------------------------
 | Diagnostic Channel   | [@qard](https://github.com/qard)                 |                                          | https://github.com/nodejs/diagnostics/issues/180
-| Async Hooks          | [@ofrobots](https://github.com/ofrobots)         |                                          | https://github.com/nodejs/diagnostics/issues/124
+| Async Hooks          | [@qard](https://github.com/qard)                 |                                          | https://github.com/nodejs/diagnostics/issues/124
 | Async Context        | [@mike-kaufman](https://github.com/mike-kaufman) | [@kjin](https://github.com/kjin)         | https://github.com/nodejs/diagnostics/issues/107
 | Support tiers        | [@mhdawson](https://github.com/mhdawson)         |                                          | https://github.com/nodejs/diagnostics/issues/157
 | CPU Profiling        | [@mmarchini](https://github.com/mmarchini)       |                                          | https://github.com/nodejs/diagnostics/issues/148
