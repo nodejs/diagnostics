@@ -71,9 +71,44 @@ Be careful not to expose the http endpoint triggering a snapshot. It should not 
 
 For versions of Node.js before v11.13.0 you can use the  [heapdump package](https://www.npmjs.com/package/heapdump)
 
-#### 4. TODO
+#### 4. Trigger Heap Snapshot using inspector protocol
 
-> TODO
+Inspector protocol can be used to trigger Heap Snapshot from outside of the process. 
+
+It's not necessary to run the actual inspector from Chromium to use the API.
+
+Here's an example snapshot trigger in bash, using `websocat` and `jq`
+
+```
+#!/bin/bash
+set -e
+
+kill -USR1 "$1"
+rm -f fifo out
+mkfifo ./fifo
+websocat -B 10000000000 "$(curl -s http://localhost:9229/json | jq -r '.[0].webSocketDebuggerUrl')" < ./fifo > ./out &
+exec 3>./fifo
+echo '{"method": "HeapProfiler.enable", "id": 1}' > ./fifo
+echo '{"method": "HeapProfiler.takeHeapSnapshot", "id": 2}' > ./fifo
+while jq -e "[.id != 2, .result != {}] | all" < <(tail -n 1 ./out); do
+  sleep 1s
+  echo "Capturing Heap Snapshot..."
+done
+
+echo -n "" > ./out.heapsnapshot
+while read -r line; do
+  f="$(echo "$line" | jq -r '.params.chunk')"
+  echo -n "$f" >> out.heapsnapshot
+  i=$((i+1))
+done < <(cat out | tail -n +2 | head -n -1)
+
+exec 3>&-
+```
+
+Not exhaustive list of memory profiling tools usable with inspector protocol:
+
+- [OpenProfiling for Node.js](https://github.com/vmarchaud/openprofiling-node)
+
 
 ## How to find a memory leak with Heap Snapshots
 
