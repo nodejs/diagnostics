@@ -1,8 +1,13 @@
 # Using SigInt Traces for Call Stacks
 
-`--trace-sigint` CLI option will print a message and stack traces on SIGINT.
+`--trace-sigint` CLI option will print a message and stack traces on `SIGINT`.
 It can be convenient to find out what's the process doing when using shells
 launched the Node.js processes.
+
+The behavior of the process on `SIGINT` is not changed with `--trace-sigint`,
+i.e. if there is no `SIGINT` listener the process will exit after the prints.
+Also, the `--trace-sigint` option will not take effect if there are active
+`SIGINT` listeners.
 
 > Caveat:
 > `--trace-sigint` CLI option is available since Node.js v13.9.0.
@@ -54,7 +59,7 @@ KEYBOARD_INTERRUPT: Script execution was interrupted by `SIGINT`
 
 Since there is no JavaScript running during idle looping, the trace will
 not contain any JavaScript stack traces but a message indicating the process
-has been terminated by a SIGINT.
+has been terminated by a `SIGINT`.
 
 ## Useful Links
 
