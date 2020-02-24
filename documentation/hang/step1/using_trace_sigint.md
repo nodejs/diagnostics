@@ -31,7 +31,7 @@ Busy JavaScript evaluation:
 > cat src/work.js
 let counter = 0;
 while (true) {
-  // emulating some works...f
+  // emulating some works...
   counter += 1;
 }
 > export NODE_OPTIONS=--trace-sigint # Equal to node --trace-sigint src/work.js
