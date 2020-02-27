@@ -53,11 +53,13 @@ You can find the most common scenarios for native crashes here:
 1. Native module crashes due bug
 2. Native module crashes due memory leak (native memory leak)
 3. Bugs in Node.js runtime and dependencies, for example:
+   - Accessing garbage collected data
+   - Accessing NULL pointer
+   - Attempting to process invalid file descriptors
+   - Use native API compiled on linux using glibc on Alpine which uses Musl
    - V8 checks, when input data checking to v8 APIs is missing can lead to a crash
-   - Access garbage collected data
    - Call v8 APIs without HandleScope
    - Call v8 APIs from wrong Thread
-   - Use native API compiled on linux using glibc on Alpine which uses Musl
 
 Check out the following guides to root cause the issue:
 
