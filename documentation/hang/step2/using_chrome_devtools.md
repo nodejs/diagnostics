@@ -4,7 +4,7 @@
 our programs and get our hands on every slice of our code and values of its
 local variables.
 
-It is worth to know that also inspectors are built to be production safe,
+It is worth to know that inspectors are built to be production safe,
 *as long as properly used*. Attaching to a production instance using Chrome
 DevTools is discouraged.
 
