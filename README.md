@@ -68,6 +68,7 @@ See the [foundation calendar](https://nodejs.org/calendar) for meeting times.
 - [@jkrems](https://github.com/jkrems) - Jan Olaf Krems
 - [@joyeecheung](https://github.com/joyeecheung) - Joyee Cheung
 - [@kjin](https://github.com/kjin) - Kelvin Jin
+- [@legendecas](https://github.com/legendecas) - Chengzhong Wu
 - [@mcollina](https://github.com/mcollina) - Matteo Collina
 - [@mhdawson](https://github.com/mhdawson) - Michael Dawson
 - [@mike-kaufman](https://github.com/mike-kaufman) - Mike Kaufman
