@@ -1,6 +1,6 @@
 # Using Chrome DevTools
 
-[Chrome DevTools][] are very useful on development. It allow us to step into
+[Chrome DevTools][] are very useful on development. It allows us to step into
 our programs and get our hands on every slice of our code and values of its
 local variables.
 
