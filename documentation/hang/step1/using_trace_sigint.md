@@ -18,7 +18,7 @@ It is very common that we find a Node.js process hanging there while all
 necessary jobs are done, and there is no outputs from the process. In the case
 we probaly need an inspector to step into the running process and trying to
 figure out what is the process doing right now. With `--trace-sigint` CLI we
-can get a stack trace when the process is interrupted by a signal `SIGINT` (for
+can get a stack trace when the process is interrupted via `SIGINT` (for
 example, when the process is interrupted with CTRL-C).
 
 Following are examples showing how `--trace-sigint` behaves on different cases
