@@ -11,5 +11,4 @@ including MacOSX.
 
 We recommend using Valgrind to investigate native memory leaks and more
 detailed information on how to use it with Node.js is available in
-[investigating_native_memory_lea(k](https://github.com/nodejs/node/blob/master/doc/guides/investigating_native_memory_leak.md)
-
+[Investigating Memory Leaks with valgrind](https://github.com/nodejs/node/blob/master/doc/guides/investigating_native_memory_leak.md)
