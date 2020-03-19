@@ -1,6 +1,6 @@
 # Investigation Native memory leaks
 
-While JavaScript is is a garbage collected language, memory is also allocated natively 
+While JavaScript is a garbage collected language, memory is also allocated natively 
 in C/C++ code. These allocations may occur in the Node.js source code, addons or
 in the Node.js dependencies (for example V8).  
 
