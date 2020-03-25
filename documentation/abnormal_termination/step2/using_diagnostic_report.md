@@ -21,4 +21,4 @@ configuration and component version issues with in your process.
 ## Useful Links
 
 _ https://nodejs.org/api/report.html
-- https://medium.com/the-node-js-collection/easily-identify-problems-in-node-js-application
+- https://medium.com/the-node-js-collection/easily-identify-problems-in-node-js-applications-with-diagnostic-report-dc82370d8029
