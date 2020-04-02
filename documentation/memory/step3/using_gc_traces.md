@@ -32,6 +32,68 @@ Obtained traces of garbage collection looks like the following lines.
 
 This is how to interpret the trace data:
 
-```
-[PID: isolate] < time taken since GC started in ms> : < type/phase of GC > <heap used before GC call in MB> ( < allocated heap before GC call in MB > ) -> < heap used after GC in MB> ( < allocated heap after GC in MB>) <time spent in GC in ms> [ < reason for GC >]
-```
+<table>
+  <tr>
+    <th>Token value</th>
+    <th>Interpretation</th>
+  </tr>
+  <tr>
+    <td>23521</td>
+    <td>PID of the running process</td>
+  </tr>
+  <tr>
+    <td>0x10268db0</td>
+    <td>Isolate (JS heap instance)</td>
+  </tr>
+  <tr>
+    <td>120</td>
+    <td>Time since the process start in ms</td>
+  </tr>
+  <tr>
+    <td>Mark-sweep</td>
+    <td>Type / Phase of GC</td>
+  </tr>
+  <tr>
+    <td>100.7</td>
+    <td>Heap used before GC in MB</td>
+  </tr>
+  <tr>
+    <td>122.7</td>
+    <td>Total heap before GC in MB</td>
+  </tr>
+  <tr>
+    <td>100.6</td>
+    <td>Heap used after GC in MB</td>
+  </tr>
+  <tr>
+    <td>122.7</td>
+    <td>Total heap after GC in MB</td>
+  </tr>
+  <tr>
+    <td>0.15 / 0.0 </td>
+    <td>Time spent in GC in ms</td>
+  </tr>
+  <tr>
+    <td>(average mu = 0.132, current mu = 0.137) deserialize GC in old space requested</td>
+    <td>Reason for GC</td>
+  </tr>
+</table>
+
+## Examples of diagnosing memory issues with trace option:
+
+A. How to get context of bad allocations using --trace-gc
+  1. Suppose we observe that the old space is ocntinously increasing.
+  2. But due to heavy gc, the heap roof is not hit, but the process is slow.
+  3. Review the trace data and figure out how much is the total heap before and after the gc.
+  4. Reduce `--max-old-space-size` such that the total heap is closer to the limit.
+  5. Allow the program to run, hit the out of memory.
+  6. The produced log gives shows the failing context.
+
+B. How to assert whether too many gc are happening or too many gc is causing an overhead
+  1. Review the trace data, specifically around time between consecutive gcs.
+  2. Review the trace data, specifically around time spent in gc.
+  3. If the time between two gc is less than the time spent in gc, the application is sseverely starving.
+  4. If the time between two gc and the time spent in gc are very high, probably the application can use a smaller heap
+  5. If the time between two gc is much greater than the time spent in gc, application is relatively healthy
+  6. While the actual numbers for these metrics change from workload to workload, a reasonable gap between gcs is 20 minutes, and a reasonable gc time is < 100 ms.
+
