@@ -30,7 +30,7 @@ Obtained traces of garbage collection looks like the following lines.
 [23521:0x10268b000]  120 ms: Mark-sweep 100.7 (122.7) -> 100.6 (122.7) MB, 0.15 / 0.0 ms  (average mu = 0.132, current mu = 0.137) deserialize GC in old space requested
 ```
 
-This is how to interpret the trace data:
+This is how to interpret the trace data (for the second line):
 
 <table>
   <tr>
@@ -74,7 +74,8 @@ This is how to interpret the trace data:
     <td>Time spent in GC in ms</td>
   </tr>
   <tr>
-    <td>(average mu = 0.132, current mu = 0.137) deserialize GC in old space requested</td>
+    <td>(average mu = 0.132, current mu = 0.137)</br>
+        deserialize GC in old space requested</td>
     <td>Reason for GC</td>
   </tr>
 </table>
@@ -82,7 +83,7 @@ This is how to interpret the trace data:
 ## Examples of diagnosing memory issues with trace option:
 
 A. How to get context of bad allocations using --trace-gc
-  1. Suppose we observe that the old space is ocntinously increasing.
+  1. Suppose we observe that the old space is continously increasing.
   2. But due to heavy gc, the heap roof is not hit, but the process is slow.
   3. Review the trace data and figure out how much is the total heap before and after the gc.
   4. Reduce `--max-old-space-size` such that the total heap is closer to the limit.
@@ -95,5 +96,4 @@ B. How to assert whether too many gc are happening or too many gc is causing an 
   3. If the time between two gc is less than the time spent in gc, the application is sseverely starving.
   4. If the time between two gc and the time spent in gc are very high, probably the application can use a smaller heap
   5. If the time between two gc is much greater than the time spent in gc, application is relatively healthy
-  6. While the actual numbers for these metrics change from workload to workload, a reasonable gap between gcs is 20 minutes, and a reasonable gc time is < 100 ms.
 
