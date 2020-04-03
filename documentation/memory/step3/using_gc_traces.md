@@ -70,12 +70,12 @@ This is how to interpret the trace data (for the second line):
     <td>Total heap after GC in MB</td>
   </tr>
   <tr>
-    <td>0.15 / 0.0 </td>
+    <td>0.15 / 0.0 </br>
+        (average mu = 0.132, current mu = 0.137)</td>
     <td>Time spent in GC in ms</td>
   </tr>
   <tr>
-    <td>(average mu = 0.132, current mu = 0.137)</br>
-        deserialize GC in old space requested</td>
+    <td>deserialize GC in old space requested</td>
     <td>Reason for GC</td>
   </tr>
 </table>
@@ -88,12 +88,21 @@ A. How to get context of bad allocations using --trace-gc
   3. Review the trace data and figure out how much is the total heap before and after the gc.
   4. Reduce `--max-old-space-size` such that the total heap is closer to the limit.
   5. Allow the program to run, hit the out of memory.
-  6. The produced log gives shows the failing context.
+  6. The produced log shows the failing context.
 
-B. How to assert whether too many gc are happening or too many gc is causing an overhead
+B. How to assert whether there is a memory leak when heap growth is observed
+  1. Suppose we observe that the old space is continously increasing.
+  2. Due to heavy gc, the heap roof is not hit, but the process is slow.
+  3. Review the trace data and figure out how much is the total heap before and after the gc.
+  4. Reduce --max-old-space-size such that the total heap is closer to the limit.
+  5. Allow the program to run, see if it hits the out of memory.
+  6. If it hits OOM, increment the heap size by ~10% or so and repeat few times. If the same pattern is observed, it is indicative of a memory leak.
+  7. If there is no OOM, then freeze the heap size to that value - A packed heap reduces memory footprint and compation latency.
+
+C. How to assert whether too many gcs are happening or too many gcs are causing an overhead
   1. Review the trace data, specifically around time between consecutive gcs.
   2. Review the trace data, specifically around time spent in gc.
-  3. If the time between two gc is less than the time spent in gc, the application is sseverely starving.
-  4. If the time between two gc and the time spent in gc are very high, probably the application can use a smaller heap
-  5. If the time between two gc is much greater than the time spent in gc, application is relatively healthy
+  3. If the time between two gc is less than the time spent in gc, the application is severely starving.
+  4. If the time between two gcs and the time spent in gc are very high, probably the application can use a smaller heap.
+  5. If the time between two gcs are much greater than the time spent in gc, application is relatively healthy.
 
