@@ -79,7 +79,7 @@ It's not necessary to run the actual inspector from Chromium to use the API.
 
 Here's an example snapshot trigger in bash, using `websocat` and `jq`
 
-```
+```bash
 #!/bin/bash
 set -e
 
