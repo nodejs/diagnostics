@@ -45,6 +45,7 @@ configuration and component version issues with in your process.
 5. Look at `javascriptStack` to see the victim of the memory leak which can be the allocation pattern and /or the actual source. Note that `javaScriptStack` will not always point to the right frame.
 
 6. The cause may be because of any of the following 2 reasons
+
   a. Process runs out of memory
     Symptoms
       * Continuously increasing memory usage is observed (can be fast or slow, over days or even weeks).
@@ -60,7 +61,6 @@ configuration and component version issues with in your process.
       To debug a memory issue we need to be able to see how much space our specific type of objects take, and what variables retain them to get garbage collected. For the effective debugging we also need to know the allocation pattern of our variables over time.
 
   b. Process utilises memory inefficiently
-
     Symptoms
       * The application uses an unexpected amount of memory (out of proportion with the application's designed consumption).
       * Observe elevated garbage collector activity.
@@ -69,7 +69,7 @@ configuration and component version issues with in your process.
       * An elevated number of page faults.
       * Higher GC activity and CPU usage.
 
-    Debugging
+     Debugging 
       To debug a memory issue we need to be able to see how much space our specific type of objects take, and what variables retain them to get garbage collected. For the effective debugging we also need to know the allocation pattern of our variables over time.
 
 ## Useful Links
