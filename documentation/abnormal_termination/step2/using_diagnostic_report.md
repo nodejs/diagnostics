@@ -51,6 +51,7 @@ configuration and component version issues with in your process.
       * Continuously increasing memory usage is observed (can be fast or slow, over days or even weeks).
       * Eventually the process crashes and restarted by the process manager.
       * The process maybe running slower than before and the restarts make certain requests to fail (load balancer responds with 502).
+    
     Side Effects
       * Process restarts due to the memory exhaustion and request are dropped on the floor.
       * Increased GC activity leads to higher CPU usage and slower response time.
@@ -69,8 +70,10 @@ configuration and component version issues with in your process.
       * An elevated number of page faults.
       * Higher GC activity and CPU usage.
 
-     Debugging 
-      To debug a memory issue we need to be able to see how much space our specific type of objects take, and what variables retain them to get garbage collected. For the effective debugging we also need to know the allocation pattern of our variables over time.
+    Debugging
+      To debug a memory issue we need to be able to see how much space our specific type of objects
+ take, and what variables retain them to get garbage collected. For the effective debugging we also
+ need to know the allocation pattern of our variables over time.
 
 ## Useful Links
 
