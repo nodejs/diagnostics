@@ -20,7 +20,7 @@ v8.setFlagsFromString('--trace_gc');
 setTimeout(() => { v8.setFlagsFromString('--notrace_gc'); }, 60e3);
 ```
 
-## Examining a trace
+### Examining a trace with `--trace_gc`
 
 Obtained traces of garbage collection looks like the following lines.
 
@@ -80,9 +80,87 @@ This is how to interpret the trace data (for the second line):
   </tr>
 </table>
 
+## Using performance hooks to trace garbage collection
+
+For Node.js v8.5.0 or later, you can use [performance hooks](https://nodejs.org/api/perf_hooks.html) to trace garbage collection.
+
+```js
+const { PerformanceObserver } = require('perf_hooks');
+
+// Create a performance observer
+const obs = new PerformanceObserver((list) => {
+  const entry = list.getEntries()[0]
+  /* 
+  PerformanceEntry {
+    name: 'gc',
+    entryType: 'gc',
+    startTime: 2820.567669,
+    duration: 1.315709,
+    kind: 1
+  }
+  */
+});
+
+// Subscribe notifications of GCs
+obs.observe({ entryTypes: ['gc'] });
+
+// Stop subscription
+obs.disconnect();
+```
+
+### Examining a trace with performance hooks
+
+You can get GC statistics as [PerformanceEnrty](https://nodejs.org/api/perf_hooks.html#perf_hooks_class_performanceentry) from the callback in [PerformanceObserver](https://nodejs.org/api/perf_hooks.html#perf_hooks_class_performanceobserver).
+
+For example:
+
+```
+PerformanceEntry {
+  name: 'gc',
+  entryType: 'gc',
+  startTime: 2820.567669,
+  duration: 1.315709,
+  kind: 1
+}
+```
+
+
+<table>
+  <tr>
+    <th>Property</th>
+    <th>Interpretation</th>
+  </tr>
+  <tr>
+    <td>name</td>
+    <td>The name of the performance entry.</td>
+  </tr>
+  <tr>
+    <td>entryType</td>
+    <td>The type of the performance entry. </td>
+  </tr>
+  <tr>
+    <td>startTime</td>
+    <td>The high resolution millisecond timestamp marking the starting time of the Performance Entry.</td>
+  </tr>
+  <tr>
+    <td>duration</td>
+    <td>The total number of milliseconds elapsed for this entry. </td>
+  </tr>
+  <tr>
+    <td>kind</td>
+    <td>The type of garbage collection operation that occurred.</td>
+  </tr>
+  <tr>
+    <td>flags</td>
+    <td>Additional information about garbage collection operation.</td>
+  </tr>
+</table>
+
+For more information, you can refer to [the documentation about performance hooks](https://nodejs.org/api/perf_hooks.html).
+
 ## Examples of diagnosing memory issues with trace option:
 
-A. How to get context of bad allocations using --trace-gc
+A. How to get context of bad allocations
   1. Suppose we observe that the old space is continously increasing.
   2. But due to heavy gc, the heap roof is not hit, but the process is slow.
   3. Review the trace data and figure out how much is the total heap before and after the gc.
@@ -94,7 +172,7 @@ B. How to assert whether there is a memory leak when heap growth is observed
   1. Suppose we observe that the old space is continously increasing.
   2. Due to heavy gc, the heap roof is not hit, but the process is slow.
   3. Review the trace data and figure out how much is the total heap before and after the gc.
-  4. Reduce --max-old-space-size such that the total heap is closer to the limit.
+  4. Reduce `--max-old-space-size` such that the total heap is closer to the limit.
   5. Allow the program to run, see if it hits the out of memory.
   6. If it hits OOM, increment the heap size by ~10% or so and repeat few times. If the same pattern is observed, it is indicative of a memory leak.
   7. If there is no OOM, then freeze the heap size to that value - A packed heap reduces memory footprint and compation latency.
