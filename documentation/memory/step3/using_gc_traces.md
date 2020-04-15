@@ -91,6 +91,9 @@ const { PerformanceObserver } = require('perf_hooks');
 const obs = new PerformanceObserver((list) => {
   const entry = list.getEntries()[0]
   /* 
+  The entry would be an instance of PerformanceEntry contains
+  metrics of garbage collection.
+  For example:
   PerformanceEntry {
     name: 'gc',
     entryType: 'gc',
@@ -140,7 +143,7 @@ PerformanceEntry {
   </tr>
   <tr>
     <td>startTime</td>
-    <td>The high resolution millisecond timestamp marking the starting time of the Performance Entry.</td>
+    <td>The high resolution millisecond timestamp <br/> marking the starting time of the Performance Entry.</td>
   </tr>
   <tr>
     <td>duration</td>
