@@ -91,7 +91,7 @@ const { PerformanceObserver } = require('perf_hooks');
 const obs = new PerformanceObserver((list) => {
   const entry = list.getEntries()[0]
   /* 
-  The entry would be an instance of PerformanceEntry contains
+  The entry would be an instance of PerformanceEntry containing
   metrics of garbage collection.
   For example:
   PerformanceEntry {
@@ -113,7 +113,7 @@ obs.disconnect();
 
 ### Examining a trace with performance hooks
 
-You can get GC statistics as [PerformanceEnrty](https://nodejs.org/api/perf_hooks.html#perf_hooks_class_performanceentry) from the callback in [PerformanceObserver](https://nodejs.org/api/perf_hooks.html#perf_hooks_class_performanceobserver).
+You can get GC statistics as [PerformanceEntry](https://nodejs.org/api/perf_hooks.html#perf_hooks_class_performanceentry) from the callback in [PerformanceObserver](https://nodejs.org/api/perf_hooks.html#perf_hooks_class_performanceobserver).
 
 For example:
 
