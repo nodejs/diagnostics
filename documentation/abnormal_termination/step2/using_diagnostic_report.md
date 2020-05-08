@@ -12,7 +12,7 @@ configuration and component version issues with in your process.
 
 1. Open the generated report (either from file or from console)
 
-  Report can be generated using the following cli flags: `node --experimental-report --report-on-fatal-error <app.js>`.
+  Report can be generated using the following cli flags: `node --report-on-fatal-error <app.js>`.
   Report can be generated using the following programatic configuration:
   ```js
   process.report...
