@@ -8,8 +8,6 @@ configuration and component version issues with in your process.
 
 ## How To
 
-//TODO, raw notes from deep dive:
-
 1. Open the generated report (either from file or from console)
 
   Report can be generated using the following cli flags: `node --report-on-fatal-error <app.js>`.
