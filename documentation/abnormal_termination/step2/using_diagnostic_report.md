@@ -18,7 +18,9 @@ configuration and component version issues with in your process.
 
 2. Open the generated report which is in the format `report.20200410.114639.4623.0.001.json`. 
 
-3. Take a look at the `javascriptHeap` section in the report
+3. Look at `javascriptStack` to see the victim of the memory leak which can be the allocation pattern and /or the actual source. Note that `javaScriptStack` will not always point to the right frame.
+
+4. Take a look at the `javascriptHeap` section in the report
   The `javascriptHeap` will give the details of memory allocation. It is split into 6 regions:
     * read_only_space
     * new_space
@@ -27,7 +29,7 @@ configuration and component version issues with in your process.
     * map_space
     * large_object_space
 
-4. Inpsect each spaces. For each space,
+5. Inpsect each spaces. For each space,
   ```js
   "old_space": {
       "memorySize": 5332910528,
@@ -39,8 +41,6 @@ configuration and component version issues with in your process.
   ```
  * used is high : Out of allocated  memory 5332910528 bytes, 5332770856 bytes are used.
  * available is very low : 130752 bytes.
-
-5. Look at `javascriptStack` to see the victim of the memory leak which can be the allocation pattern and /or the actual source. Note that `javaScriptStack` will not always point to the right frame.
 
 6. The cause may be because of any of the following 2 reasons
 
