@@ -18,16 +18,17 @@ configuration and component version issues with in your process.
 
 2. Open the generated report which is in the format `report.20200410.114639.4623.0.001.json`. 
 
-3. Look at `javascriptStack` to see the victim of the memory leak which can be the allocation pattern and /or the actual source. Note that `javaScriptStack` will not always point to the right frame.
+3. Look at `javascriptStack` to see what is the cause of abnormal termination. Are there evidence of it being caused by programatic errors? If yes, examine the source as pointed in the call frame and attempt to figure out what went wrong.
 
-4. Take a look at the `javascriptHeap` section in the report
-  The `javascriptHeap` will give the details of memory allocation. It is split into 6 regions:
-    * read_only_space
-    * new_space
-    * old_space
-    * code_space
-    * map_space
-    * large_object_space
+4.  If programatic error is ruled out, then examine  `javascriptStack` to see if there is evidence of memory leak / exhaustion. If so, the stack will show the victim of the memory leak which can be the allocation pattern and /or the actual source. Note that `javaScriptStack` will not always point to the right frame.
+
+The `javascriptHeap` will give the details of memory allocation. It is split into 6 regions:
+     * read_only_space
+     * new_space
+     * old_space
+     * code_space
+     * map_space
+     * large_object_space
 
 5. Inpsect each spaces. For each space,
   ```js
