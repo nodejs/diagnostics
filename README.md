@@ -78,6 +78,7 @@ See the [foundation calendar](https://nodejs.org/calendar) for meeting times.
 - [@ofrobots](https://github.com/ofrobots) - Ali Ijaz Sheikh
 - [@othiym23](https://github.com/othiym23) - Forrest L Norvell
 - [@Qard](https://github.com/Qard) - Stephen Belanger
+- [@rafaelgss](https://github.com/RafaelGSS) - Rafael Gonzaga
 - [@sam-github](https://github.com/sam-github) - Sam Roberts
 - [@watson](https://github.com/watson) - Thomas Watson
 - [@yunong](https://github.com/yunong) - Yunong Xiao
