@@ -70,7 +70,6 @@ See the [foundation calendar](https://nodejs.org/calendar) for meeting times.
 - [@joyeecheung](https://github.com/joyeecheung) - Joyee Cheung
 - [@kjin](https://github.com/kjin) - Kelvin Jin
 - [@legendecas](https://github.com/legendecas) - Chengzhong Wu
-- [@mcollina](https://github.com/mcollina) - Matteo Collina
 - [@mhdawson](https://github.com/mhdawson) - Michael Dawson
 - [@mike-kaufman](https://github.com/mike-kaufman) - Mike Kaufman
 - [@mmarchini](https://github.com/mmarchini) - Matheus Marchini
@@ -99,3 +98,4 @@ See the [foundation calendar](https://nodejs.org/calendar) for meeting times.
 - [@thlorenz](https://github.com/thlorenz) - Thorsten Lorenz
 - [@trevnorris](https://github.com/trevnorris) - Trevor Norris
 - [@danielkhan](https://github.com/danielkhan) - Daniel Khan
+- [@mcollina](https://github.com/mcollina) - Matteo Collina
