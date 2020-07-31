@@ -72,7 +72,7 @@ See the [foundation calendar](https://nodejs.org/calendar) for meeting times.
 - [@legendecas](https://github.com/legendecas) - Chengzhong Wu
 - [@mhdawson](https://github.com/mhdawson) - Michael Dawson
 - [@mike-kaufman](https://github.com/mike-kaufman) - Mike Kaufman
-- [@mmarchini](https://github.com/mmarchini) - Matheus Marchini
+- [@mmarchini](https://github.com/mmarchini) - Mary Marchini
 - [@naugtur](https://github.com/naugtur) - Zbyszek Tenerowicz
 - [@ofrobots](https://github.com/ofrobots) - Ali Ijaz Sheikh
 - [@othiym23](https://github.com/othiym23) - Forrest L Norvell
