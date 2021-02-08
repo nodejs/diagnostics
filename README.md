@@ -97,7 +97,7 @@ See the [foundation calendar](https://nodejs.org/calendar) for meeting times.
 - [@piscisaureus](https://github.com/piscisaureus) - Bert Belder
 - [@pmuellr](https://github.com/pmuellr) - Patrick Mueller
 - [@rmg](https://github.com/rmg) - Ryan Graham
-- [@thekemkid](https://github.com/thekemkid) - Glen Keane
+- [@GlenTiki](https://github.com/GlenTiki) - Glen Keane
 - [@thlorenz](https://github.com/thlorenz) - Thorsten Lorenz
 - [@trevnorris](https://github.com/trevnorris) - Trevor Norris
 - [@danielkhan](https://github.com/danielkhan) - Daniel Khan
