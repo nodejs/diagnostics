@@ -48,7 +48,7 @@ For futher reference in nodejs debugging follow [these instructions](https://nod
 
 ### Enabling Blackbox through UI
 
-// TODO: waiting https://github.com/GoogleChrome/developer.chrome.com/issues/1074 resolution and point to this tutorial.
+See the [ignore-script section](https://developer.chrome.com/docs/devtools/javascript/reference/#ignore-list) at Google Chrome reference
 
 ### Enabling Blackbox through CLI
 
