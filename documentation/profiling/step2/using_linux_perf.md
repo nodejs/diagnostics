@@ -66,7 +66,7 @@ Althought, `perf` output is not a node specific tool, it might have issues with 
 
 ## Useful Links
 
-- https://nodejs.org/en/docs/guides/diagnostics-flamegraph/ (Further informations in how to generate the flamegraph)
-- [http://www.brendangregg.com/blog/2014-09-17/node-flame-graphs-on-linux.html](http://www.brendangregg.com/blog/2014-09-17/node-flame-graphs-on-linux.html)
+- https://nodejs.org/en/docs/guides/diagnostics-flamegraph/
+- https://www.brendangregg.com/blog/2014-09-17/node-flame-graphs-on-linux.html
 - https://perf.wiki.kernel.org/index.php/Main_Page
 - https://blog.rafaelgss.com.br/node-cpu-profiler
