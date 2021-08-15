@@ -6,7 +6,7 @@
 
 ## How To
 
-Linux Perf is usually available through the `linux-tools-common` package. Through either `--perf-basic-prof` or `--perf-basic-prof-only-functions` we are able to start an nodejs application supporting _perf_events_.
+Linux Perf is usually available through the `linux-tools-common` package. Through either `--perf-basic-prof` or `--perf-basic-prof-only-functions` we are able to start a Node.js application supporting _perf_events_.
 
 > `--perf-basic-prof` will always write to a file (/tmp/perf-PID.map), which can lead to infinite disk growth. If that’s a concern either use the module: https://www.npmjs.com/package/linux-perf or `--perf-basic-prof-only-functions`
 
@@ -28,7 +28,7 @@ In this phase, you may want to use a load test in the application in order to ge
 
 The `perf` will generate a file inside the `/tmp` folder, usually called `/tmp/perf-PID.map`(in above example: `/tmp/perf-3870.map`) containing the traces for each function called.
 
-For aggregate those results in specific file execute:
+To aggregate those results in a specific file execute:
 
 ```sh
 sudo perf script > perfs.out
@@ -55,14 +55,14 @@ node 3870 25147.878454:          1 cycles:
 ....
 ```
 
-It's quite hard to get insights from this raw file and is a common sense to generate flamegraphs for a better visualization.
+The raw output can be a bit hard to understand so typically the raw file is used to generate flamegraphs for a better visualization.
 
 
 ![Example nodejs flamegraph](https://user-images.githubusercontent.com/26234614/129488674-8fc80fd5-549e-4a80-8ce2-2ba6be20f8e8.png)
 
 To generate a flamegraph from this result, follow [this tutorial](https://nodejs.org/en/docs/guides/diagnostics-flamegraph/#create-a-flame-graph-with-system-perf-tools) from step 6.
 
-Althought, `perf` output is not a node specific tool, it might have issues with how JavaScript code is optimized in Node.js. See [perf output issues](https://nodejs.org/en/docs/guides/diagnostics-flamegraph/#perf-output-issues) for a futher reference.
+Because `perf` output is not a Node.js specific tool, it might have issues with how JavaScript code is optimized in Node.js. See [perf output issues](https://nodejs.org/en/docs/guides/diagnostics-flamegraph/#perf-output-issues) for a futher reference.
 
 ## Useful Links
 
