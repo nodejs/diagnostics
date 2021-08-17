@@ -90,7 +90,7 @@ debug> Debugger.setBlackboxPatterns({ patterns: ['example-blackbox.js'] })
 Afterall, perform a `continue` and see the script be running without stopping into `example-blackbox.js` function.
 
 ```console
-debug> continue
+debug> c
 < Async done
 <
 < Done!
