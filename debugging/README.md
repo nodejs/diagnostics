@@ -39,3 +39,65 @@ Name | Sponsor | Protocol available | State |
 [Chrome DevTools]: https://github.com/ChromeDevTools/devtools-frontend
 [Theseus]: https://github.com/adobe-research/theseus
 
+
+## Blackbox
+
+Blackbox is a popular term that allows debugging user-land code without touching in their internals.
+
+For futher reference in nodejs debugging follow [these instructions](https://nodejs.org/en/docs/guides/debugging-getting-started/).
+
+### Enabling Blackbox through UI
+
+See the [ignore-script section](https://developer.chrome.com/docs/devtools/javascript/reference/#ignore-list) at Google Chrome reference
+
+### Enabling Blackbox through CLI
+
+Let's create a file called `example-blackbox.js` to simulate a blackbox usage
+
+```js
+module.exports = {
+  doSomethingAsync: async () => {
+    debugger
+    console.log('Async done')
+  }
+}
+```
+
+Then we have our `index.js` file
+
+```js
+const { doSomethingAsync } = require('./example-blackbox')
+async function main() {
+  await doSomethingAsync()
+  console.log('Done!')
+}
+
+main()
+```
+
+Start debugging using CLI:
+
+```console
+node inspect index.js
+```
+
+and enable the blackbox by calling [`Debugger.setBlackBoxPatterns`](https://chromedevtools.github.io/devtools-protocol/tot/Debugger/#method-setBlackboxPatterns) and passing the ignore regex, in our case a simple `example-blackbox.js`:
+
+```console
+debug> Debugger.setBlackboxPatterns({ patterns: ['example-blackbox.js'] })
+```
+
+Afterall, perform a `continue` and see the script be running without stopping into `example-blackbox.js` function.
+
+```console
+debug> c
+< Async done
+<
+< Done!
+<
+< Waiting for the debugger to disconnect...
+```
+
+### Additional information
+
+The `blackbox` term was replaced by `ignore-list` at Google Chrome Dev Tools in latest versions.
