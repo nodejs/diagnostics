@@ -26,5 +26,5 @@ In this use-case, we are interested in code pieces that use more CPU cycles than
 the others. When we do this locally, we usually try to optimize our code.
 
 - [Using V8 Profiler](./step1/using_v8_profiler.md)
-- [Using Linux Perf](./step2/using_linux_perf.md.md)
+- [Using Linux Perf](./step2/using_linux_perf.md)
 - [Using Native Tools](./step3/using_native_tools.md)
