@@ -9,8 +9,4 @@ of the application as it handles a business-critical workload.
 
 ## How To
 
-//TODO
-
-## Useful Links
-
-- https://nodejs.org/en/docs/guides/debugging-getting-started_
+https://nodejs.org/en/docs/guides/debugging-getting-started/
