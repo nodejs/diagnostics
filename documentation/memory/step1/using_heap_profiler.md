@@ -1,5 +1,14 @@
 # Using Heap Profiler
 
+To debug a memory issue we need to be able to see how much space our specific type of objects take, and what variables retain them to get garbage collected. For the effective debugging we also need to know the allocation pattern of our variables over time.
+
+The heap profiler acts on top of V8 towards to bring snapshots of memory over time. In this document, we will cover the memory profiling using:
+
+1. Allocation Timeline
+2. Sampling Heap Profiler
+
+Unlike heap dump that was cover in the [step 2](../step2/using_heap_snapshot.md), the idea of using real-time profiling is to understand allocations in a given time frame.
+
 ## Heap Profiler - Allocation Timeline
 
 Heap Profiler is similar to the Sampling Heap Profiler, except it will track every allocation. It has
