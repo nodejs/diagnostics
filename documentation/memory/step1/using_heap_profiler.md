@@ -14,6 +14,8 @@ Unlike heap dump that was cover in the [step 2](../step2/using_heap_snapshot.md)
 Heap Profiler is similar to the Sampling Heap Profiler, except it will track every allocation. It has
 higher overhead than the Sampling Heap Profiler so it’s not recommended to use in production.
 
+> You can use [@mmarchini/observe](https://www.npmjs.com/package/@mmarchini/observe) to do it programmatically.
+
 ### How To
 
 Start the application:
@@ -54,6 +56,8 @@ Check the [usefull links](#usefull-links) section for futher information about m
 
 Sampling Heap Profiler tracks memory allocation pattern and reserved space over time. As it’s
 sampling based it has a low enough overhead to use it in production systems.
+
+> You can use the module [`heap-profiler`](https://www.npmjs.com/package/heap-profile) to do it programmatically.
 
 ### How To
 
