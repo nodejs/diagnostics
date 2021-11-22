@@ -6,7 +6,7 @@ The goal of this WG is to ensure Node provides a set of comprehensive, documente
 
 Work is divided into several domains:
 - [Tracing](./tracing)
-- [Profiling](./profiling)
+- [Profiling](./documentation/poor-performance)
 - [Heap and Memory Analysis](./heap-memory)
 - [Step Debugging](./debugging)
 
