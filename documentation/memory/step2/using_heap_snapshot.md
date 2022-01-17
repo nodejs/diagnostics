@@ -50,7 +50,7 @@ $ ls
 Heap.20190718.133405.15554.0.001.heapsnapshot
 ```
 
-For details, see the latest documentation of [heapsnapshot-signal flag](https://nodejs.org/api/cli.html#cli_heapsnapshot_signal_signal)
+For details, see the latest documentation of [heapsnapshot-signal flag](https://nodejs.org/api/cli.html#--heapsnapshot-signalsignal)
 
 
 #### 3. Use `writeHeapSnapshot` function
