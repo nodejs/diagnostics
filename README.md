@@ -56,6 +56,7 @@ See the [foundation calendar](https://nodejs.org/calendar) for meeting times.
 - [@cjihrig](https://github.com/cjihrig) - Colin Ihrig
 - [@Flarna](https://github.com/Flarna) - Gerhard Stöbich
 - [@gireeshpunathil](https://github.com/gireeshpunathil) - Gireesh Punathil
+- [@tony-go](https://github.com/tony-go) - Tony Gorez
 - [@harshithakp](https://github.com/harshithaKP) - Harshitha K P
 - [@hashseed](https://github.com/hashseed) - Yang Guo
 - [@hekike](https://github.com/hekike) - Peter Marton
