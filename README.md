@@ -34,7 +34,7 @@ Work needed includes:
 
 #### Semi-monthly Meetings
 
-Meetings of the working group typically occur every other Wednesday. A few days before each
+Meetings of the working group typically occur every other Tuesday, at two different time slots, alternating (3.30 PM UTC and 10.30 PM UTC). A few days before each
 meeting, an [issue](https://github.com/nodejs/diagnostics/issues) will be created with the
 date and time of the meeting. The issue will provide schedule logistics as well as an agenda,
 links to meeting minutes, and information about how to join as a participant or a viewer.
