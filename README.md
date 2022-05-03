@@ -1,6 +1,6 @@
 # Diagnostics Working Group
 
-[![Join us on OpenJS Foundation slack (channel #nodejs-diagnostics-wg)](https://img.shields.io/badge/Join%20us%20on-nodeslackers.com-blue)](https://openjs-foundation.slack.com/archives/C025TDEBHN1)
+[![Join us on OpenJS Foundation slack (channel #nodejs-diagnostics-wg)](https://img.shields.io/badge/Join%20us%20on-openjs%20foundation.slack-blue)](https://openjs-foundation.slack.com/archives/C025TDEBHN1)
 
 The goal of this WG is to ensure Node provides a set of comprehensive, documented, extensible diagnostic protocols, formats, and APIs to enable tool vendors to provide reliable diagnostic tools for Node.
 
