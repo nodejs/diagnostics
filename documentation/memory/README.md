@@ -42,7 +42,7 @@ For the effective debugging we also need to know the allocation pattern of our
 variables over time.
 
 - [Using Heap Profiler](./step1/using_heap_profiler.md)
-- [Heap Heap Snapshot](./step2/using_heap_snapshot.md)
+- [Using Heap Snapshot](./step2/using_heap_snapshot.md)
 - [GC Traces](./step3/using_gc_traces.md)
 - [Native Tools](./step4/using_native_tools.md)
 
@@ -66,6 +66,6 @@ For the effective debugging we also need to know the allocation pattern of our
 variables over time.
 
 - [Using Heap Profiler](./step1/using_heap_profiler.md)
-- [Heap Heap Snapshot](./step2/using_heap_snapshot.md)
+- [Using Heap Snapshot](./step2/using_heap_snapshot.md)
 - [GC Traces](./step3/using_gc_traces.md)
 - [Native Tools](./step4/using_native_tools.md)
