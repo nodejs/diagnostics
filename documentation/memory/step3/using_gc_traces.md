@@ -1,15 +1,15 @@
 # Tracing garbage collection
 
-In this guide you'll go through the fundamentals of garbage collection's traces.
+This guide will go through the fundamentals of garbage collection traces.
 
-By the end of this guide you'll be able to:
-* Enable traces in your Node.js program
+By the end of this guide, you'll be able to:
+* Enable traces in your Node.js application
 * Interpret traces
 * Find memory leak source
 
-There's probably a lot of stuff to learn about how the garbage collector works, but if you learn one thing it's that when GC is running, your code is not.
+There's probably a lot of stuff to learn about how the garbage collector works, but if you have to know one thing, it's that when GC is running, your code is not.
 
-You may want to know how often and how long the garbage collection is running.
+You may want to know how often and long the garbage collection runs.
 
 ## Setup
 
@@ -60,10 +60,10 @@ server.listen(9999, (err, address) => {
 });
 ```
 
-> Even if the leak is evident here, in the context of a real-world application finding the source of a leak could be cumbersome.
+> Even if the leak is evident here, finding the source of a leak could be cumbersome in the context of a real-world application.
 
-## Runnig with garbage collection traces
-You can see traces for garbage collection in console output of your process using the `--trace_gc` flag.
+## Running with garbage collection traces
+You can see traces for garbage collection in the console output of your process using the `--trace_gc` flag.
 
 ```
 node --trace_gc server.js
@@ -91,18 +91,18 @@ The `--trace-gc` flag outputs all garbage collection events in the console. Firs
 [13973:0x110008000]       44 ms: Scavenge 2.4 (3.2) -> 2.0 (4.2) MB, 0.5 / 0.0 ms  (average mu = 1.000, current mu = 1.000) allocation failure
 ```
 
-| Token value                                                 | Interpretation                     |
-|-------------------------------------------------------------|------------------------------------|
-| 13973                                                       | PID of the running process         |
-| 0x110008000                                                 | Isolate (JS heap instance)         |
-| 44 ms                                                       | Time since the process start in ms |
-| Scavenge                                                    | Type / Phase of GC                 |
-| 2.4                                                         | Heap used before GC in MB          |
-| (3.2)                                                       | Total heap before GC in MB         |
-| 2.0                                                         | Heap used after GC in MB           |
-| (4.2)                                                       | Total heap after GC in MB          |
-| 0.5 / 0.0 ms (average mu = 1.000, current mu = 1.000)       | Time spent in GC in ms             |
-| allocation failure                                          | Reason for GC                      |
+| Token value                                                 | Interpretation                           |
+|-------------------------------------------------------------|------------------------------------------|
+| 13973                                                       | PID of the running process               |
+| 0x110008000                                                 | Isolate (JS heap instance)               |
+| 44 ms                                                       | The time since the process started in ms |
+| Scavenge                                                    | Type / Phase of GC                       |
+| 2.4                                                         | Heap used before GC in MB                |
+| (3.2)                                                       | Total heap before GC in MB               |
+| 2.0                                                         | Heap used after GC in MB                 |
+| (4.2)                                                       | Total heap after GC in MB                |
+| 0.5 / 0.0 ms (average mu = 1.000, current mu = 1.000)       | Time spent in GC in ms                   |
+| allocation failure                                          | Reason for GC                            |
 
 We'll only focus on two events here:
 * Scavenge
@@ -110,7 +110,7 @@ We'll only focus on two events here:
 
 The heap is divided into "spaces." Amongst these, we have a space called the "new" space and another one called the "old" space.
 
-> 👉 In reality, the heap is a bit different, but for the purpose of this article, we'll stick to a simpler version. If you want more details, I encourage you to look at this [talk of Peter Marshall](https://v8.dev/blog/trash-talk) about Orinoco.
+> 👉 In reality, the heap structure is a bit different, but we'll stick to a simpler version for this article. If you want more details, I encourage you to look at this [talk of Peter Marshall](https://v8.dev/blog/trash-talk) about Orinoco.
 
 ### Scavenge
 
@@ -137,7 +137,7 @@ Let's imagine a Scavenge scenario:
   | A | C | E | <unallocated> |
   ```
 
-Objects that are not garbage collected after two Scavenge operations will be promoted to old space.
+v8 will promote objects, not garbage collected after two Scavenge operations to the old space.
 
 > 👉 Full [Scavenge scenario](https://github.com/thlorenz/v8-perf/blob/master/gc.md#sample-scavenge-scenario).
 
@@ -156,7 +156,7 @@ This algorithm is composed of two phases:
 
 ### Memory leak
 
-Now we can come back to the output of the `--trace-gc` flag and see how we could interpret the output.
+Now we can return to the output of the `--trace-gc` flag and see how we could interpret the result.
 
 * First, install (`autocannon`)[https://www.npmjs.com/package/autocannon]:
 ```bash
@@ -173,7 +173,7 @@ node --trace-gc server.js
 autocannon http://localhost:9999/write
 ```
 
-Now, if you come back quickly to the previous terminal window: you will see that there are a lot of `Mark-sweep` events in the console. We also see that the amount of memory collected after the event is insignificant.
+Now, if you return quickly to the previous terminal window: you will see many `Mark-sweep` events in the console. We also see that the amount of memory collected after the event is insignificant.
 
 Now that we are experts in garbage collection! What could we deduce?
 
@@ -183,32 +183,32 @@ But how could we spot the context?
 
 ### How to get the context of bad allocations
 
-We previously observes that the old space is continously increasing. The following steps will help you to know wich part of the code is reponsible.
+We previously observed that the old space is continuously increasing. The following steps will help you to know which part of the code is responsible.
 
-  1. Review the trace data and figure out how much is the total heap before and after the gc.
-  2. Use the [`--max-old-space-size`](https://nodejs.org/api/cli.html#--max-old-space-sizesize-in-megabytes) to reduce the total the old space size.
-  3. Run the program, until you hit the out of memory.
+  1. Review the trace data and figure out how much is the total heap before and after the GC.
+  2. Use the [`--max-old-space-size`](https://nodejs.org/api/cli.html#--max-old-space-sizesize-in-megabytes) to reduce the total old space size.
+  3. Run the program until you hit the out of memory.
   4. The produced log shows the failing context.
-  6. If it hits OOM, increment the heap size by ~10% or so and repeat few times. If the same pattern is observed, it is indicative of a memory leak.
-  7. If there is no OOM, then freeze the heap size to that value - A packed heap reduces memory footprint and compation latency.
+  6. If it hits OOM, increment the heap size by ~10% and repeat a few times. If the same pattern is observed, it indicates a memory leak.
+  7. If there is no OOM, then freeze the heap size to that value - A packed heap reduces memory footprint and computation latency.
 
 TODO(tony-go): add a snippet example
 
 ### Slowness
 
-How to assert whether too many gcs are happening or too many gcs are causing an overhead?
+How do you assert whether too many garbage collections are happening or causing an overhead?
 
-  1. Review the trace data, specifically around time between consecutive gcs.
-  2. Review the trace data, specifically around time spent in gc.
-  3. If the time between two gc is less than the time spent in gc, the application is severely starving.
-  4. If the time between two gcs and the time spent in gc are very high, probably the application can use a smaller heap.
-  5. If the time between two gcs are much greater than the time spent in gc, application is relatively healthy.
+  1. Review the trace data, precisely the time between consecutive collections.
+  2. Review the trace data, specifically around time spent in GC.
+  3. If the time between two GC is less than the time spent in GC, the application is severely starving.
+  4. If the time between two GCS and the time spent in GC are very high, probably the application can use a smaller heap.
+  5. If the time between two GCS is much greater than the time spent in GC, the application is relatively healthy.
 
-## Bonnus: Trace garbage collection programaticaly
+## Bonus: Trace garbage collection programmatically
 
 ### Using `v8` module
 
-You might want to avoid getting traces from the entire lifetime of your process running on a server. In that case, set the flag from within the process. The `v8` module exposes an API to set flags on the fly.
+You might want to avoid getting traces from the entire lifetime of your process running on a server. In that case, set the flag from within the process. The `v8` module exposes an API to put flags on the fly.
 
 ```js
 /// at the top of the 'server.js' file, please add:
@@ -270,14 +270,14 @@ PerformanceEntry {
 }
 ```
 
-| Property   | Interpretation |
-|------------|----------------|
-| name       | The name of the performance entry.                                                           |
-| entryType  | The type of the performance entry.                                                           |
-| startTime  | The high resolution millisecond timestamp marking the starting time of the Performance Entry.|
-| duration   | The total number of milliseconds elapsed for this entry.                                     |
-| kind       | The type of garbage collection operation that occurred.                                      |
-| flags      | The high resolution millisecond timestamp marking the starting time of the Performance Entry.|
+| Property   | Interpretation                                                                                  |
+|------------|-------------------------------------------------------------------------------------------------|
+| name       | The name of the performance entry.                                                              |
+| entryType  | The type of the performance entry.                                                              |
+| startTime  | The high-resolution millisecond timestamp is marking the starting time of the Performance Entry.|
+| duration   | The total number of milliseconds elapsed for this entry.                                        |
+| kind       | The type of garbage collection operation that occurred.                                         |
+| flags      | The high-resolution millisecond timestamp is marking the starting time of the Performance Entry.|
 
-For more information, you can refer to [the documentation about performance hooks](https://nodejs.org/api/perf_hooks.html).
+For more information, refer to [the documentation about performance hooks](https://nodejs.org/api/perf_hooks.html).
 
