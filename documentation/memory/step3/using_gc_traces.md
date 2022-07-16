@@ -150,7 +150,7 @@ This algorithm is composed of two phases:
 * **Sweep**: Scans for white objects and converts them to free spaces.
 
 > 👉 In fact, the Mark and Sweep steps are a bit more elaborate. Please read this [document](https://github.com/thlorenz/v8-perf/blob/master/gc.md#marking-state) for more details.
-<img src="https://upload.wikimedia.org/wikipedia/commons/4/4a/Animation_of_the_Naive_Mark_and_Sweep_Garbage_Collector_Algorithm.gif" /
+<img src="https://upload.wikimedia.org/wikipedia/commons/4/4a/Animation_of_the_Naive_Mark_and_Sweep_Garbage_Collector_Algorithm.gif" />
 
 ## `--trace-gc` in action
 
