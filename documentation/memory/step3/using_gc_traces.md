@@ -192,8 +192,6 @@ We previously observed that the old space is continuously increasing. The follow
   6. If it hits OOM, increment the heap size by ~10% and repeat a few times. If the same pattern is observed, it indicates a memory leak.
   7. If there is no OOM, then freeze the heap size to that value - A packed heap reduces memory footprint and computation latency.
 
-TODO(tony-go): add a snippet example
-
 ### Slowness
 
 How do you assert whether too many garbage collections are happening or causing an overhead?
@@ -220,7 +218,7 @@ server.get('/enable-gc-traces', () => {
   v8.setFlagsFromString('--trace_gc');
 });
 
-server.get('/disable-gc-traces', (
+server.get('/disable-gc-traces', () => {
   v8.setFlagsFromString('--notrace_gc');
 });
 ```
