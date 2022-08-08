@@ -5,7 +5,7 @@ This guide will go through the fundamentals of garbage collection traces.
 By the end of this guide, you'll be able to:
 * Enable traces in your Node.js application
 * Interpret traces
-* Find memory leak source
+* Identify potential memory issues in your Node.js application 
 
 There's probably a lot of stuff to learn about how the garbage collector works, but if you have to know one thing, it's that when GC is running, your code is not.
 
@@ -63,7 +63,7 @@ server.listen(9999, (err, address) => {
 > Even if the leak is evident here, finding the source of a leak could be cumbersome in the context of a real-world application.
 
 ## Running with garbage collection traces
-You can see traces for garbage collection in the console output of your process using the `--trace_gc` flag.
+You can see traces for garbage collection in the standard output of your process using the `--trace_gc` flag.
 
 ```
 node --trace_gc server.js
@@ -85,7 +85,7 @@ Hard to read? Maybe we should pass in review a few concepts and explain the outp
 
 ### Examining a trace with `--trace_gc`
 
-The `--trace-gc` flag outputs all garbage collection events in the console. First, let me describe the composition of each line. We'll use the following line as a model:
+The `--trace-gc` flag outputs all garbage collection events in the console. The composition of each line can be described as:
 
 ```bash
 [13973:0x110008000]       44 ms: Scavenge 2.4 (3.2) -> 2.0 (4.2) MB, 0.5 / 0.0 ms  (average mu = 1.000, current mu = 1.000) allocation failure
@@ -108,7 +108,7 @@ We'll only focus on two events here:
 * Scavenge
 * Mark-sweep
 
-The heap is divided into "spaces." Amongst these, we have a space called the "new" space and another one called the "old" space.
+The heap is divided into _spaces_. Amongst these, we have a space called the "new" space and another one called the "old" space.
 
 > 👉 In reality, the heap structure is a bit different, but we'll stick to a simpler version for this article. If you want more details, I encourage you to look at this [talk of Peter Marshall](https://v8.dev/blog/trash-talk) about Orinoco.
 
