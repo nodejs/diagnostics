@@ -189,7 +189,7 @@ Now, try to it for 100mb:
 node --trace-gc --max-old-space-size=100 script.mjs
 ```
 
-You should exeprience something similar, the only difference will be the last GC trace that should be last GC trace that contains a bigger heap size.
+You should experience something similar, the only difference should be that the last GC trace will contain a bigger heap size.
 
 ```bash
 <--- Last few GCs --->
@@ -211,7 +211,7 @@ How do you assert whether too many garbage collections are happening or causing 
 
 ## Fix the leak
 
-Now let's fix the leak. Instead of using a object to store our entries we could use a file.
+Now let's fix the leak. Instead of using an object to store our entries, we could use a file.
 
 Let's modify our script a bit:
 
@@ -251,7 +251,7 @@ async function summary () {
 })();
 ```
 
-Using a `Set` to store data is not a bad practice at all, you should just care about the memory footprint of your program.
+Using a `Set` to store data is not a bad practice at all; you should just care about the memory footprint of your program.
 
 > Note: you can find the source code of this exercice in the [Node.js Diagnostics repository](https://github.com/nodejs/diagnostics/tree/main/documentation/memory/step3/exerice).
 
@@ -262,12 +262,12 @@ node --trace-gc script-fix.mjs
 ```
 
 You should observe two things:
-* the Mark-sweep events appears less frequently
-* the memory footprint doesn't exceed 25mb versus more than 130mb with the first script.
+* Mark-sweep events appear less frequently
+* the memory footprint doesn't exceed 25MB versus more than 130MB with the first script.
 
-It makes a lot of sense as the new version put less pressure on the memory than the first one.
+It makes a lot of sense as the new version puts less pressure on the memory than the first one.
 
-**Takeway**: What do you think about improving this script? You probably see that the new version of the script is slow. What if we use a `Set` again and write its content into a file only when the memory reach a certain size?
+**Takeaway**: What do you think about improving this script? You probably see that the new version of the script is slow. What if we use a `Set` again and write its content into a file only when the memory reaches a specific size?
 
 > (`getheapstatistics`)[https://nodejs.org/dist/latest-v16.x/docs/api/v8.html#v8getheapstatistics] API could help you.
 
