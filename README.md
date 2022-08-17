@@ -69,6 +69,7 @@ See the [foundation calendar](https://nodejs.org/calendar) for meeting times.
 - [@mhdawson](https://github.com/mhdawson) - Michael Dawson
 - [@mike-kaufman](https://github.com/mike-kaufman) - Mike Kaufman
 - [@naugtur](https://github.com/naugtur) - Zbyszek Tenerowicz
+- [@No9](https://github.com/No9) - Anton Whalley
 - [@ofrobots](https://github.com/ofrobots) - Ali Ijaz Sheikh
 - [@othiym23](https://github.com/othiym23) - Forrest L Norvell
 - [@Qard](https://github.com/Qard) - Stephen Belanger
