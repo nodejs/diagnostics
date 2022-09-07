@@ -1,6 +1,9 @@
 # Using `llnode` for post-mortem debugging
 
-You probably already experienced bugs that only happen in production. You'd like to reproduce it and step through instructions, but it will imply stopping your Node.js process and certainly degrade the user experience.
+You probably already experienced crashes that only happen in production.
+You'd like to reproduce it and step through instructions, 
+but it will imply stopping your Node.js process and certainly 
+degrade the user experience.
 
 The purpose of this guide is to help you to find route causes
 of your application crashes in production.
@@ -10,7 +13,9 @@ that will helps you to go thoroughly through this tutorial.
 
 ## Concepts
 
-### What is post-mortem debugging?
+> ✋ If you familliar with the concept of core dump and `lldb`, 
+> please skip this chapter, and start [here](#explore-your-firstcore-dump)
+
 ### What is a core dump?
 ### What is `lldb`?
 
