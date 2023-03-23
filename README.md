@@ -51,7 +51,6 @@ See the [foundation calendar](https://nodejs.org/calendar) for meeting times.
 
 <!-- ncu-team-sync.team(nodejs/diagnostics) -->
 
-- [@AndreasMadsen](https://github.com/AndreasMadsen) - Andreas Madsen
 - [@BridgeAR](https://github.com/BridgeAR) - Ruben Bridgewater
 - [@cjihrig](https://github.com/cjihrig) - Colin Ihrig
 - [@Flarna](https://github.com/Flarna) - Gerhard Stöbich
@@ -83,6 +82,7 @@ See the [foundation calendar](https://nodejs.org/calendar) for meeting times.
 
 #### Emeritus
 
+- [@AndreasMadsen](https://github.com/AndreasMadsen) - Andreas Madsen
 - [@bnoordhuis](https://github.com/bnoordhuis) - Ben Noordhuis
 - [@brycebaril](https://github.com/brycebaril) - Bryce Baril
 - [@dberesford](https://github.com/dberesford) - Damian Beresford
