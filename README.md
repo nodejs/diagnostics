@@ -59,7 +59,6 @@ See the [foundation calendar](https://nodejs.org/calendar) for meeting times.
 - [@harshithakp](https://github.com/harshithaKP) - Harshitha K P
 - [@hashseed](https://github.com/hashseed) - Yang Guo
 - [@hekike](https://github.com/hekike) - Peter Marton
-- [@Hollerberg](https://github.com/Hollerberg) - Gernot Reisinger
 - [@jasnell](https://github.com/jasnell) - James M Snell
 - [@jkrems](https://github.com/jkrems) - Jan Olaf Krems
 - [@joyeecheung](https://github.com/joyeecheung) - Joyee Cheung
@@ -96,3 +95,4 @@ See the [foundation calendar](https://nodejs.org/calendar) for meeting times.
 - [@danielkhan](https://github.com/danielkhan) - Daniel Khan
 - [@mcollina](https://github.com/mcollina) - Matteo Collina
 - [@mmarchini](https://github.com/mmarchini) - Mary Marchini
+- [@Hollerberg](https://github.com/Hollerberg) - Gernot Reisinger
