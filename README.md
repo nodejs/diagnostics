@@ -75,6 +75,8 @@ See the [foundation calendar](https://nodejs.org/calendar) for meeting times.
 - [@sam-github](https://github.com/sam-github) - Sam Roberts
 - [@watson](https://github.com/watson) - Thomas Watson
 - [@yunong](https://github.com/yunong) - Yunong Xiao
+- [@AbhiPrasad](https://github.com/AbhiPrasad) - Abhijeet Prasad
+- [@timfish](https://github.com/timfish) - Tim Fish
 
 
 <!-- ncu-team-sync end -->
