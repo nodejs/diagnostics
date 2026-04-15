@@ -64,7 +64,6 @@ See the [foundation calendar](https://nodejs.org/calendar) for meeting times.
 - [@joyeecheung](https://github.com/joyeecheung) - Joyee Cheung
 - [@kjin](https://github.com/kjin) - Kelvin Jin
 - [@legendecas](https://github.com/legendecas) - Chengzhong Wu
-- [@mhdawson](https://github.com/mhdawson) - Michael Dawson
 - [@mike-kaufman](https://github.com/mike-kaufman) - Mike Kaufman
 - [@naugtur](https://github.com/naugtur) - Zbyszek Tenerowicz
 - [@No9](https://github.com/No9) - Anton Whalley
@@ -96,5 +95,6 @@ See the [foundation calendar](https://nodejs.org/calendar) for meeting times.
 - [@trevnorris](https://github.com/trevnorris) - Trevor Norris
 - [@danielkhan](https://github.com/danielkhan) - Daniel Khan
 - [@mcollina](https://github.com/mcollina) - Matteo Collina
+- [@mhdawson](https://github.com/mhdawson) - Michael Dawson
 - [@mmarchini](https://github.com/mmarchini) - Mary Marchini
 - [@Hollerberg](https://github.com/Hollerberg) - Gernot Reisinger
